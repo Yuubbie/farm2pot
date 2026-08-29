@@ -3,16 +3,16 @@ const WHATSAPP_NUMBER_ALT = "2348162470726"; // Alternative ordering number
 
 export default function Contact() {
   return (
-    <section className="bg-forest px-6 py-24 text-cream sm:px-12 lg:px-20">
+    <section className="bg-forest px-5 py-14 text-cream sm:px-12 sm:py-24 lg:px-20">
       <div className="mx-auto max-w-3xl text-center">
-        <span className="font-body text-sm uppercase tracking-[0.2em] text-ember">
+        <span className="font-body text-xs uppercase tracking-[0.2em] text-ember sm:text-sm">
           Find Us
         </span>
-        <h1 className="mt-2 font-display text-4xl font-semibold sm:text-5xl">
+        <h1 className="mt-2 font-display text-3xl font-semibold sm:text-4xl lg:text-5xl">
           Get in Touch
         </h1>
 
-        <div className="mt-10 grid gap-8 text-left sm:grid-cols-2">
+        <div className="mt-8 grid gap-6 text-left sm:mt-10 sm:grid-cols-2 sm:gap-8">
           <div>
             <h2 className="font-body text-sm font-semibold uppercase tracking-wide text-ember">
               Location

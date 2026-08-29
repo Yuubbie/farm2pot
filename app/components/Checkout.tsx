@@ -2,15 +2,15 @@ const WHATSAPP_NUMBER = "2348176554823"; // Farm2Pot ordering line
 
 export default function Checkout() {
   return (
-    <section className="bg-cream px-6 py-24 sm:px-12 lg:px-20">
+    <section className="bg-cream px-5 py-14 sm:px-12 sm:py-24 lg:px-20">
       <div className="mx-auto max-w-2xl text-center">
-        <span className="font-body text-sm uppercase tracking-[0.2em] text-terracotta">
+        <span className="font-body text-xs uppercase tracking-[0.2em] text-terracotta sm:text-sm">
           Ready to Order?
         </span>
-        <h1 className="mt-2 font-display text-4xl font-semibold text-charcoal sm:text-5xl">
+        <h1 className="mt-2 font-display text-3xl font-semibold text-charcoal sm:text-4xl lg:text-5xl">
           Let&rsquo;s get your pot ready
         </h1>
-        <p className="mt-6 font-body text-lg text-charcoal/70">
+        <p className="mt-4 font-body text-base text-charcoal/70 sm:mt-6 sm:text-lg">
           Online cart and card payment are coming soon. For now, order
           directly on WhatsApp &mdash; just tell us what you&rsquo;d like
           from the menu.

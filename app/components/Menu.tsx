@@ -68,22 +68,22 @@ export default function Menu() {
   const categoriesInGroup = menu.filter((c) => c.group === activeGroup);
 
   return (
-    <section id="menu" className="bg-cream px-6 py-20 sm:px-12 lg:px-20">
+    <section id="menu" className="bg-cream px-4 py-12 sm:px-12 sm:py-20 lg:px-20">
       <div className="mx-auto max-w-5xl">
-        <span className="font-body text-sm uppercase tracking-[0.2em] text-terracotta">
+        <span className="font-body text-xs uppercase tracking-[0.2em] text-terracotta sm:text-sm">
           Our Menu
         </span>
-        <h2 className="mt-2 font-display text-4xl font-semibold text-charcoal sm:text-5xl">
+        <h2 className="mt-2 font-display text-3xl font-semibold text-charcoal sm:text-4xl lg:text-5xl">
           Something for every table
         </h2>
 
         {/* Group tabs */}
-        <div className="mt-8 flex gap-2">
+        <div className="mt-6 flex gap-2 overflow-x-auto sm:mt-8">
           {GROUPS.map((g) => (
             <button
               key={g}
               onClick={() => setActiveGroup(g)}
-              className={`rounded-full px-6 py-2 font-body font-semibold transition ${
+              className={`whitespace-nowrap rounded-full px-5 py-2 font-body text-sm font-semibold transition sm:px-6 ${
                 activeGroup === g
                   ? "bg-charcoal text-cream"
                   : "bg-charcoal/5 text-charcoal/70 hover:bg-charcoal/10"
@@ -95,7 +95,7 @@ export default function Menu() {
         </div>
 
         {/* Sticky category jump nav */}
-        <div className="sticky top-[73px] z-10 -mx-6 mt-6 flex gap-2 overflow-x-auto bg-cream/95 px-6 py-3 backdrop-blur sm:-mx-12 sm:px-12 lg:-mx-20 lg:px-20">
+        <div className="sticky top-[57px] z-10 -mx-4 mt-4 flex gap-2 overflow-x-auto bg-cream/95 px-4 py-3 backdrop-blur sm:top-[73px] sm:-mx-12 sm:mt-6 sm:px-12 lg:-mx-20 lg:px-20">
           {categoriesInGroup.map((c) => (
             <a
               key={c.id}
