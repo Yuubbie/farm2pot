@@ -9,7 +9,33 @@ function formatPrice(n: number) {
   return `₦${n.toLocaleString()}`;
 }
 
+function DishCard({ item }: { item: MenuItem }) {
+  return (
+    <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-charcoal/5 shadow-md transition-shadow hover:shadow-xl">
+      <img
+        src={item.image}
+        alt={item.name}
+        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/15 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+        <p className="font-display text-xl font-bold leading-tight text-cream sm:text-2xl">
+          {item.name}
+        </p>
+        {item.price && (
+          <p className="mt-1 font-body text-sm font-semibold text-ember sm:text-base">
+            {formatPrice(item.price)}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function CategoryBlock({ category }: { category: MenuCategory }) {
+  const withPhoto = category.items.filter((i) => i.image);
+  const withoutPhoto = category.items.filter((i) => !i.image);
+
   return (
     <div id={category.id} className="scroll-mt-24">
       <div className="mb-4 flex items-baseline justify-between gap-4 border-b border-charcoal/10 pb-2">
@@ -28,35 +54,39 @@ function CategoryBlock({ category }: { category: MenuCategory }) {
           </span>
         )}
       </div>
-      <ul className="grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
-        {category.items.map((item) => (
-          <li
-            key={item.name}
-            className="flex items-center justify-between gap-4 font-body text-charcoal/90"
-          >
-            <span className="flex items-center gap-3">
-              {item.image && (
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="h-12 w-12 flex-shrink-0 rounded-lg object-cover"
-                />
+
+      {/* Photographed items get a large, expressive card grid */}
+      {withPhoto.length > 0 && (
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+          {withPhoto.map((item) => (
+            <DishCard key={item.name} item={item} />
+          ))}
+        </div>
+      )}
+
+      {/* Everything else stays as a compact list */}
+      {withoutPhoto.length > 0 && (
+        <ul className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
+          {withoutPhoto.map((item) => (
+            <li
+              key={item.name}
+              className="flex items-baseline justify-between gap-4 font-body text-charcoal/90"
+            >
+              <span>{item.name}</span>
+              {item.price && (
+                <span className="whitespace-nowrap text-sm text-charcoal/60">
+                  {formatPrice(item.price)}
+                </span>
               )}
-              {item.name}
-            </span>
-            {item.price && (
-              <span className="whitespace-nowrap text-sm text-charcoal/60">
-                {formatPrice(item.price)}
-              </span>
-            )}
-            {!item.price && !category.flatPrice && !category.bigPrice && (
-              <span className="whitespace-nowrap text-sm italic text-charcoal/40">
-                ask staff
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
+              {!item.price && !category.flatPrice && !category.bigPrice && (
+                <span className="whitespace-nowrap text-sm italic text-charcoal/40">
+                  ask staff
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
