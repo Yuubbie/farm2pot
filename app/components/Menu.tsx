@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { menu, MenuCategory } from "../data/menu";
+import { menu, MenuCategory, MenuItem } from "../data/menu";
 
 const GROUPS = ["Food", "Drinks", "Experience"] as const;
 
