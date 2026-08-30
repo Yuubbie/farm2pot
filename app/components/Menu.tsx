@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { menu, MenuCategory, MenuItem } from "../data/menu";
+import Reveal from "./Reveal";
 
 const GROUPS = ["Food", "Drinks", "Experience"] as const;
 
@@ -113,9 +114,9 @@ export default function Menu() {
             <button
               key={g}
               onClick={() => setActiveGroup(g)}
-              className={`whitespace-nowrap rounded-full px-5 py-2 font-body text-sm font-semibold transition sm:px-6 ${
+              className={`whitespace-nowrap rounded-full px-5 py-2 font-body text-sm font-semibold transition-all duration-300 sm:px-6 ${
                 activeGroup === g
-                  ? "bg-charcoal text-cream"
+                  ? "scale-105 bg-charcoal text-cream"
                   : "bg-charcoal/5 text-charcoal/70 hover:bg-charcoal/10"
               }`}
             >
@@ -138,9 +139,15 @@ export default function Menu() {
         </div>
 
         {/* Category sections */}
-        <div className="mt-10 space-y-14">
-          {categoriesInGroup.map((c) => (
-            <CategoryBlock key={c.id} category={c} />
+        <div
+          key={activeGroup}
+          className="mt-10 space-y-14"
+          style={{ animation: "fadeTab 0.4s ease-out both" }}
+        >
+          {categoriesInGroup.map((c, i) => (
+            <Reveal key={c.id} delay={Math.min(i * 80, 320)}>
+              <CategoryBlock category={c} />
+            </Reveal>
           ))}
         </div>
       </div>

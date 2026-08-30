@@ -1,9 +1,12 @@
+import Reveal from "./Reveal";
+
 const WHATSAPP_NUMBER = "2348176554823"; // Farm2Pot ordering line
 
 export default function Checkout() {
   return (
     <section className="bg-cream px-5 py-14 sm:px-12 sm:py-24 lg:px-20">
-      <div className="mx-auto max-w-2xl text-center">
+      <Reveal>
+        <div className="mx-auto max-w-2xl text-center">
         <span className="font-body text-xs uppercase tracking-[0.2em] text-terracotta sm:text-sm">
           Ready to Order?
         </span>
@@ -37,7 +40,8 @@ export default function Checkout() {
             - Delivery/pickup toggle
             - Paystack checkout button
         */}
-      </div>
+        </div>
+      </Reveal>
     </section>
   );
 }
