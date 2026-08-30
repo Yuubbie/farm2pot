@@ -1,6 +1,6 @@
 import Reveal from "./Reveal";
 
-const WHATSAPP_NUMBER = "2348176554823"; // Farm2Pot ordering line
+const WHATSAPP_NUMBER = "2347032352158"; // Current Farm2Pot ordering line
 
 export default function Checkout() {
   return (

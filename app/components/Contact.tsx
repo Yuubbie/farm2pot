@@ -1,7 +1,6 @@
 import Reveal from "./Reveal";
 
-const WHATSAPP_NUMBER = "2348176554823"; // Primary — from official Farm2Pot logo
-const WHATSAPP_NUMBER_ALT = "2348162470726"; // Alternative ordering number
+const WHATSAPP_NUMBER = "2347032352158"; // Current Farm2Pot ordering line
 
 export default function Contact() {
   return (
@@ -41,14 +40,6 @@ export default function Contact() {
                 className="font-body text-cream/85 underline decoration-dotted hover:text-cream"
               >
                 Chat with us
-              </a>
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER_ALT}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-body text-sm text-cream/60 underline decoration-dotted hover:text-cream"
-              >
-                Alternative number
               </a>
             </div>
           </div>
