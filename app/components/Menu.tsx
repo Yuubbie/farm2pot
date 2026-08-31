@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { menu, MenuCategory, MenuItem } from "../data/menu";
+import { MenuCategory, MenuItem } from "../data/menu";
 import Reveal from "./Reveal";
 
 const GROUPS = ["Food", "Drinks", "Experience"] as const;
@@ -92,11 +92,11 @@ function CategoryBlock({ category }: { category: MenuCategory }) {
   );
 }
 
-export default function Menu() {
+export default function Menu({ data }: { data: MenuCategory[] }) {
   const [activeGroup, setActiveGroup] =
     useState<(typeof GROUPS)[number]>("Food");
 
-  const categoriesInGroup = menu.filter((c) => c.group === activeGroup);
+  const categoriesInGroup = data.filter((c) => c.group === activeGroup);
 
   return (
     <section id="menu" className="bg-cream px-4 py-12 sm:px-12 sm:py-20 lg:px-20">

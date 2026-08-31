@@ -1,12 +1,12 @@
-import { menu } from "../data/menu";
+import { MenuCategory } from "../data/menu";
 import Reveal from "./Reveal";
 
-// Pull every item across the whole menu that has a real photo
-const featured = menu
-  .flatMap((category) => category.items.map((item) => ({ ...item, category: category.name })))
-  .filter((item) => item.image);
+export default function FeaturedGallery({ data }: { data: MenuCategory[] }) {
+  // Pull every item across the whole menu that has a real photo
+  const featured = data
+    .flatMap((category) => category.items.map((item) => ({ ...item, category: category.name })))
+    .filter((item) => item.image);
 
-export default function FeaturedGallery() {
   if (featured.length === 0) return null;
 
   return (
