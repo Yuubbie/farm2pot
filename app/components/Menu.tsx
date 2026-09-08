@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MenuCategory, MenuItem } from "../data/menu";
 import Reveal from "./Reveal";
+import { useCart } from "../context/CartContext";
 
 const GROUPS = ["Food", "Drinks", "Experience"] as const;
 
@@ -10,7 +11,114 @@ function formatPrice(n: number) {
   return `₦${n.toLocaleString()}`;
 }
 
-function DishCard({ item }: { item: MenuItem }) {
+// Works out how an item is priced: a fixed single price, a big/small
+// choice (soups), or no confirmed price yet.
+type Pricing =
+  | { type: "single"; price: number }
+  | { type: "bigsmall"; big: number; small: number }
+  | { type: "none" };
+
+function getPricing(item: MenuItem, category: MenuCategory): Pricing {
+  if (item.price) return { type: "single", price: item.price };
+  if (category.flatPrice) return { type: "single", price: category.flatPrice };
+  if (category.bigPrice && category.smallPrice) {
+    return { type: "bigsmall", big: category.bigPrice, small: category.smallPrice };
+  }
+  return { type: "none" };
+}
+
+function AddControls({
+  item,
+  category,
+  compact = false,
+}: {
+  item: MenuItem;
+  category: MenuCategory;
+  compact?: boolean;
+}) {
+  const { addItem } = useCart();
+  const pricing = getPricing(item, category);
+  const [added, setAdded] = useState(false);
+
+  const flash = () => {
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1200);
+  };
+
+  if (pricing.type === "none") {
+    return (
+      <span className="whitespace-nowrap text-sm italic text-charcoal/40">
+        ask staff
+      </span>
+    );
+  }
+
+  if (pricing.type === "bigsmall") {
+    return (
+      <div className="flex items-center gap-1.5">
+        <button
+          onClick={() => {
+            addItem({
+              id: `${category.id}-${item.name}-big`,
+              name: `${item.name} (Big)`,
+              price: pricing.big,
+            });
+            flash();
+          }}
+          className="whitespace-nowrap rounded-full border border-terracotta/40 px-2.5 py-1 font-body text-xs font-semibold text-terracotta transition hover:bg-terracotta hover:text-cream"
+        >
+          Big {formatPrice(pricing.big)}
+        </button>
+        <button
+          onClick={() => {
+            addItem({
+              id: `${category.id}-${item.name}-small`,
+              name: `${item.name} (Small)`,
+              price: pricing.small,
+            });
+            flash();
+          }}
+          className="whitespace-nowrap rounded-full border border-terracotta/40 px-2.5 py-1 font-body text-xs font-semibold text-terracotta transition hover:bg-terracotta hover:text-cream"
+        >
+          Small {formatPrice(pricing.small)}
+        </button>
+        {added && <span className="font-body text-xs text-forest">Added ✓</span>}
+      </div>
+    );
+  }
+
+  // single price
+  return (
+    <div className="flex items-center gap-2">
+      {!compact && (
+        <span className="whitespace-nowrap text-sm text-charcoal/60">
+          {formatPrice(pricing.price)}
+        </span>
+      )}
+      <button
+        onClick={() => {
+          addItem({
+            id: `${category.id}-${item.name}`,
+            name: item.name,
+            price: pricing.price,
+          });
+          flash();
+        }}
+        aria-label={`Add ${item.name} to cart`}
+        className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-terracotta font-body text-cream transition hover:bg-ember"
+      >
+        {added ? "✓" : "+"}
+      </button>
+      {compact && (
+        <span className="whitespace-nowrap font-body text-sm text-ember">
+          {formatPrice(pricing.price)}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function DishCard({ item, category }: { item: MenuItem; category: MenuCategory }) {
   return (
     <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-charcoal/5 shadow-md transition-shadow hover:shadow-xl">
       <img
@@ -19,15 +127,11 @@ function DishCard({ item }: { item: MenuItem }) {
         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/15 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-        <p className="font-display text-xl font-bold leading-tight text-cream sm:text-2xl">
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-4 sm:p-5">
+        <p className="font-display text-lg font-bold leading-tight text-cream sm:text-xl">
           {item.name}
         </p>
-        {item.price && (
-          <p className="mt-1 font-body text-sm font-semibold text-ember sm:text-base">
-            {formatPrice(item.price)}
-          </p>
-        )}
+        <AddControls item={item} category={category} compact />
       </div>
     </div>
   );
@@ -60,30 +164,21 @@ function CategoryBlock({ category }: { category: MenuCategory }) {
       {withPhoto.length > 0 && (
         <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {withPhoto.map((item) => (
-            <DishCard key={item.name} item={item} />
+            <DishCard key={item.name} item={item} category={category} />
           ))}
         </div>
       )}
 
       {/* Everything else stays as a compact list */}
       {withoutPhoto.length > 0 && (
-        <ul className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
           {withoutPhoto.map((item) => (
             <li
               key={item.name}
-              className="flex items-baseline justify-between gap-4 font-body text-charcoal/90"
+              className="flex items-center justify-between gap-4 font-body text-charcoal/90"
             >
               <span>{item.name}</span>
-              {item.price && (
-                <span className="whitespace-nowrap text-sm text-charcoal/60">
-                  {formatPrice(item.price)}
-                </span>
-              )}
-              {!item.price && !category.flatPrice && !category.bigPrice && (
-                <span className="whitespace-nowrap text-sm italic text-charcoal/40">
-                  ask staff
-                </span>
-              )}
+              <AddControls item={item} category={category} />
             </li>
           ))}
         </ul>

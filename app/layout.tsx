@@ -2,6 +2,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SplashScreen from "./components/SplashScreen";
+import { CartProvider } from "./context/CartContext";
 
 export const metadata = {
   title: "Farm2Pot And Grill",
@@ -22,10 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-body">
-        <SplashScreen />
-        <Navbar />
-        {children}
-        <Footer />
+        <CartProvider>
+          <SplashScreen />
+          <Navbar />
+          {children}
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );

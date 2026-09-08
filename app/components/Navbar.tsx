@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useCart } from "../context/CartContext";
 
 const links = [
   { href: "/menu", label: "Menu" },
@@ -12,6 +13,7 @@ const links = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { count } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -54,9 +56,14 @@ export default function Navbar() {
           <Link
             href="/checkout"
             onClick={() => setOpen(false)}
-            className="rounded-full bg-terracotta px-3 py-1.5 font-body text-xs font-semibold text-cream transition hover:bg-ember sm:px-5 sm:py-2 sm:text-sm"
+            className="relative rounded-full bg-terracotta px-3 py-1.5 font-body text-xs font-semibold text-cream transition hover:bg-ember sm:px-5 sm:py-2 sm:text-sm"
           >
             Order Now
+            {count > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-forest text-[10px] font-bold text-cream">
+                {count}
+              </span>
+            )}
           </Link>
 
           {/* Mobile hamburger */}

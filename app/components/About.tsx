@@ -4,13 +4,14 @@ export default function About() {
   return (
     <section className="bg-charcoal px-5 py-14 text-cream sm:px-12 sm:py-24 lg:px-20">
       <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[1fr_1.3fr] lg:items-center lg:gap-12">
-        {/* CEO photo placeholder */}
+        {/* CEO photo */}
         <Reveal>
           <div className="aspect-square w-full max-w-xs overflow-hidden rounded-2xl bg-cream/10 sm:max-w-sm">
-            {/* TODO: replace with Itoro's photo once received */}
-            <div className="flex h-full w-full items-center justify-center font-body text-sm text-cream/40">
-              CEO photo coming soon
-            </div>
+            <img
+              src="https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/CEO%20farm2pot.png"
+              alt="Farm2Pot And Grill — Meet the CEO"
+              className="h-full w-full object-cover"
+            />
           </div>
         </Reveal>
 
