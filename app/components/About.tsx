@@ -39,12 +39,12 @@ export default function About() {
 
             <div className="mt-8 border-t border-cream/15 pt-6 sm:mt-10 sm:pt-8">
               <h2 className="font-display text-xl font-semibold text-ember sm:text-2xl">
-                Meet the CEO
+                Meet the CEO — Itoro Sunday
               </h2>
               <p className="mt-3 font-body text-sm text-cream/70 sm:text-base">
-                {/* TODO: drop in Itoro's personal bio once received */}
-                Bio coming soon &mdash; the person behind Farm2Pot, in her own
-                words.
+                Itoro Sunday is the founder and CEO of Farm2Pot And Grill
+                — the person behind every recipe, every dish, and the
+                vision for what Farm2Pot has become.
               </p>
             </div>
           </div>

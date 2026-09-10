@@ -1,5 +1,4 @@
 import Menu from "../components/Menu";
-import FeaturedGallery from "../components/FeaturedGallery";
 import { getMenu } from "../lib/getMenu";
 
 export const metadata = {
@@ -15,7 +14,6 @@ export default async function MenuPage() {
 
   return (
     <main>
-      <FeaturedGallery data={data} />
       <Menu data={data} />
     </main>
   );

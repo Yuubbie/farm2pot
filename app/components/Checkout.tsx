@@ -6,7 +6,7 @@ import Script from "next/script";
 import { useCart } from "../context/CartContext";
 import Reveal from "./Reveal";
 
-const WHATSAPP_NUMBER = "2347032352158";
+const WHATSAPP_NUMBER = "2347032727893";
 
 function formatPrice(n: number) {
   return `₦${n.toLocaleString()}`;

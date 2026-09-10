@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const DEVELOPER_WHATSAPP = "2347032352158";
-const WHATSAPP_NUMBER = "2347032352158";
+const WHATSAPP_NUMBER = "2347032727893";
 
 const columns = [
   {

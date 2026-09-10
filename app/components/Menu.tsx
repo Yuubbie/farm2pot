@@ -3,29 +3,11 @@
 import { useState } from "react";
 import { MenuCategory, MenuItem } from "../data/menu";
 import Reveal from "./Reveal";
+import DishModal from "./DishModal";
 import { useCart } from "../context/CartContext";
+import { formatPrice, getPricing } from "../lib/pricing";
 
 const GROUPS = ["Food", "Drinks", "Experience"] as const;
-
-function formatPrice(n: number) {
-  return `₦${n.toLocaleString()}`;
-}
-
-// Works out how an item is priced: a fixed single price, a big/small
-// choice (soups), or no confirmed price yet.
-type Pricing =
-  | { type: "single"; price: number }
-  | { type: "bigsmall"; big: number; small: number }
-  | { type: "none" };
-
-function getPricing(item: MenuItem, category: MenuCategory): Pricing {
-  if (item.price) return { type: "single", price: item.price };
-  if (category.flatPrice) return { type: "single", price: category.flatPrice };
-  if (category.bigPrice && category.smallPrice) {
-    return { type: "bigsmall", big: category.bigPrice, small: category.smallPrice };
-  }
-  return { type: "none" };
-}
 
 function AddControls({
   item,
@@ -55,9 +37,10 @@ function AddControls({
 
   if (pricing.type === "bigsmall") {
     return (
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             addItem({
               id: `${category.id}-${item.name}-big`,
               name: `${item.name} (Big)`,
@@ -70,7 +53,8 @@ function AddControls({
           Big {formatPrice(pricing.big)}
         </button>
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             addItem({
               id: `${category.id}-${item.name}-small`,
               name: `${item.name} (Small)`,
@@ -87,16 +71,16 @@ function AddControls({
     );
   }
 
-  // single price
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
       {!compact && (
         <span className="whitespace-nowrap text-sm text-charcoal/60">
           {formatPrice(pricing.price)}
         </span>
       )}
       <button
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           addItem({
             id: `${category.id}-${item.name}`,
             name: item.name,
@@ -118,9 +102,20 @@ function AddControls({
   );
 }
 
-function DishCard({ item, category }: { item: MenuItem; category: MenuCategory }) {
+function DishCard({
+  item,
+  category,
+  onOpen,
+}: {
+  item: MenuItem;
+  category: MenuCategory;
+  onOpen: () => void;
+}) {
   return (
-    <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-charcoal/5 shadow-md transition-shadow hover:shadow-xl">
+    <div
+      onClick={onOpen}
+      className="group relative aspect-[4/5] cursor-pointer overflow-hidden rounded-2xl bg-charcoal/5 shadow-md transition-shadow hover:shadow-xl"
+    >
       <img
         src={item.image}
         alt={item.name}
@@ -137,7 +132,13 @@ function DishCard({ item, category }: { item: MenuItem; category: MenuCategory }
   );
 }
 
-function CategoryBlock({ category }: { category: MenuCategory }) {
+function CategoryBlock({
+  category,
+  onOpenItem,
+}: {
+  category: MenuCategory;
+  onOpenItem: (item: MenuItem, category: MenuCategory) => void;
+}) {
   const withPhoto = category.items.filter((i) => i.image);
   const withoutPhoto = category.items.filter((i) => !i.image);
 
@@ -160,22 +161,26 @@ function CategoryBlock({ category }: { category: MenuCategory }) {
         )}
       </div>
 
-      {/* Photographed items get a large, expressive card grid */}
       {withPhoto.length > 0 && (
         <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {withPhoto.map((item) => (
-            <DishCard key={item.name} item={item} category={category} />
+            <DishCard
+              key={item.name}
+              item={item}
+              category={category}
+              onOpen={() => onOpenItem(item, category)}
+            />
           ))}
         </div>
       )}
 
-      {/* Everything else stays as a compact list */}
       {withoutPhoto.length > 0 && (
         <ul className="grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
           {withoutPhoto.map((item) => (
             <li
               key={item.name}
-              className="flex items-center justify-between gap-4 font-body text-charcoal/90"
+              onClick={() => onOpenItem(item, category)}
+              className="flex cursor-pointer items-center justify-between gap-4 rounded-lg px-2 py-1 font-body text-charcoal/90 transition hover:bg-charcoal/5"
             >
               <span>{item.name}</span>
               <AddControls item={item} category={category} />
@@ -190,11 +195,14 @@ function CategoryBlock({ category }: { category: MenuCategory }) {
 export default function Menu({ data }: { data: MenuCategory[] }) {
   const [activeGroup, setActiveGroup] =
     useState<(typeof GROUPS)[number]>("Food");
+  const [openItem, setOpenItem] = useState<{ item: MenuItem; category: MenuCategory } | null>(
+    null
+  );
 
   const categoriesInGroup = data.filter((c) => c.group === activeGroup);
 
   return (
-    <section id="menu" className="bg-cream px-4 py-12 sm:px-12 sm:py-20 lg:px-20">
+    <section id="menu" className="bg-cream px-4 py-8 sm:px-12 sm:py-12 lg:px-20">
       <div className="mx-auto max-w-5xl">
         <span className="font-body text-xs uppercase tracking-[0.2em] text-terracotta sm:text-sm">
           Our Menu
@@ -202,6 +210,9 @@ export default function Menu({ data }: { data: MenuCategory[] }) {
         <h2 className="mt-2 font-display text-3xl font-semibold text-charcoal sm:text-4xl lg:text-5xl">
           Something for every table
         </h2>
+        <p className="mt-2 font-body text-sm text-charcoal/50">
+          Tap any dish to see the price and what pairs well with it.
+        </p>
 
         {/* Group tabs */}
         <div className="mt-6 flex gap-2 overflow-x-auto sm:mt-8">
@@ -241,11 +252,23 @@ export default function Menu({ data }: { data: MenuCategory[] }) {
         >
           {categoriesInGroup.map((c, i) => (
             <Reveal key={c.id} delay={Math.min(i * 80, 320)}>
-              <CategoryBlock category={c} />
+              <CategoryBlock
+                category={c}
+                onOpenItem={(item, category) => setOpenItem({ item, category })}
+              />
             </Reveal>
           ))}
         </div>
       </div>
+
+      {openItem && (
+        <DishModal
+          item={openItem.item}
+          category={openItem.category}
+          allCategories={data}
+          onClose={() => setOpenItem(null)}
+        />
+      )}
     </section>
   );
 }
