@@ -14,7 +14,7 @@ const SUPABASE_URL = "https://udjushobeawcltcotwrt.supabase.co";
 // IMPORTANT: this must be the SERVICE ROLE key (Settings → API → service_role),
 // not the anon key — only the service role key can bypass storage permissions
 // for this one-time upload. Never put this key anywhere in your website code.
-const SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkanVzaG9iZWF3Y2x0Y290d3J0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODQ4NDIsImV4cCI6MjEwMzc2MDg0Mn0.kTSDjCLV7NwD-BysZFfxEFmFho6ChVWcrpix3kQJGgc";
+const SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkanVzaG9iZWF3Y2x0Y290d3J0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODE4NDg0MiwiZXhwIjoyMTAzNzYwODQyfQ.TAp6v6V3iTt0ZQ4N_ffgLez5ilhFLHEpZl79FQRtblg";
 
 const BUCKET = "menu-images";
 const folder = process.argv[2];

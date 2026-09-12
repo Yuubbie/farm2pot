@@ -24,13 +24,13 @@ export const menu: MenuCategory[] = [
     items: [
       { name: "Egusi Soup", image: "/menu-images/egusi-soup.jpg" },
       { name: "Ogbono Soup", image: "/menu-images/ogbono-soup.jpg" },
-      { name: "Okro Soup" },
+      { name: "Okro Soup", image: "/menu-images/Okro_Soup_Real.jpg" },
       { name: "Fisherman Soup" },
       { name: "Oha Soup" },
       { name: "Afia Efere (White Soup)" },
       { name: "Efo Soup" },
       { name: "Edikang Ikong Soup", image: "/menu-images/edikang-ikong.jpg" },
-      { name: "Afang Soup", image: "/menu-images/afang-soup.jpg" },
+      { name: "Afang Soup", image: "/menu-images/Afang_Soup.jpg" },
     ],
   },
   {
@@ -53,8 +53,8 @@ export const menu: MenuCategory[] = [
       { name: "Turkey", price: 8000 },
       { name: "Chicken", price: 7000 },
       { name: "Goat Meat", price: 7000 },
-      { name: "Catfish" }, // price TBC
-      { name: "Croaker" }, // price TBC
+      { name: "Catfish", image: "/menu-images/Catfish.jpg" }, // price TBC
+      { name: "Croaker", image: "/menu-images/Croaker.jpg" }, // price TBC
       { name: "Beef" }, // price TBC
     ],
   },
@@ -68,6 +68,7 @@ export const menu: MenuCategory[] = [
       { name: "Coconut Rice" },
       { name: "Wheat Rice + Stew" },
       { name: "Noodles + Egg", price: 4000 },
+      { name: "Native Rice", image: "/menu-images/Native_Rice.jpg" }, // price TBC
     ],
   },
   {
@@ -152,11 +153,19 @@ export const menu: MenuCategory[] = [
       { name: "Goat Meat Ramen Pepper Soup", price: 15500 },
       { name: "Turkey Meat Ramen Pepper Soup", price: 16500 },
       { name: "Catfish Ramen Pepper Soup", price: 15500 },
-      { name: "Seafood Ramen Pepper Soup", price: 20000 },
+      { name: "Seafood Ramen Pepper Soup", price: 20000, image: "/menu-images/Seafood_Ramen_Pepper_Soup.jpg" },
       {
         name: "Farm2Pot Special Ramen Pepper Soup",
         price: 22000,
       },
+    ],
+  },
+  {
+    id: "breakfast",
+    name: "Breakfast",
+    group: "Food",
+    items: [
+      { name: "Akara and Pap", image: "/menu-images/Akara_and_Pap.jpg" }, // price TBC
     ],
   },
   {
