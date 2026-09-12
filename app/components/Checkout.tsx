@@ -2,20 +2,20 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Script from "next/script";
 import { useCart } from "../context/CartContext";
 import Reveal from "./Reveal";
 
 const WHATSAPP_NUMBER = "2347032727893";
 
+// Manual bank transfer details — Paystack is switched off for now until the
+// client sets up her own Paystack account. This is the fallback payment
+// method: customer transfers here, then confirms via WhatsApp.
+const BANK_NAME = "Moniepoint";
+const ACCOUNT_NUMBER = "8246098181";
+const ACCOUNT_NAME = "Farm2Pot Kitchen";
+
 function formatPrice(n: number) {
   return `₦${n.toLocaleString()}`;
-}
-
-declare global {
-  interface Window {
-    PaystackPop: any;
-  }
 }
 
 export default function Checkout() {
@@ -25,97 +25,83 @@ export default function Checkout() {
   const [phone, setPhone] = useState("");
   const [deliveryType, setDeliveryType] = useState<"pickup" | "delivery">("pickup");
   const [address, setAddress] = useState("");
-  const [paying, setPaying] = useState(false);
+  const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const canPay =
+  const canSend =
     items.length > 0 &&
     name.trim() !== "" &&
-    email.trim() !== "" &&
     phone.trim() !== "" &&
     (deliveryType === "pickup" || address.trim() !== "");
 
-  const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
+  function buildWhatsAppMessage() {
+    const lines = [
+      "New order — Farm2Pot And Grill",
+      "",
+      `Name: ${name}`,
+      `Phone: ${phone}`,
+      deliveryType === "delivery" ? `Delivery to: ${address}` : "Pickup",
+      "",
+      "Items:",
+      ...items.map(
+        (item) => `- ${item.quantity}x ${item.name} (${formatPrice(item.price * item.quantity)})`
+      ),
+      "",
+      `Total: ${formatPrice(total)}`,
+      "",
+      "Payment: Bank Transfer",
+      `Bank: ${BANK_NAME}`,
+      `Account Number: ${ACCOUNT_NUMBER}`,
+      `Account Name: ${ACCOUNT_NAME}`,
+      "",
+      "I'll send proof of payment here to confirm my order.",
+    ];
+    return lines.join("\n");
+  }
 
-  const handlePay = () => {
+  const handleSendOrder = async () => {
     setError("");
+    setSending(true);
 
-    if (!publicKey) {
-      setError(
-        "Online payment isn't switched on yet — please order via WhatsApp instead."
-      );
-      return;
+    // Save the order (status: pending) so it isn't lost if the customer
+    // never actually opens WhatsApp. Payment itself is confirmed manually
+    // once the transfer and proof come in.
+    try {
+      await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customer: { name, email, phone },
+          items,
+          total,
+          deliveryType,
+          address,
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to save order record:", err);
+      // Don't block the WhatsApp handoff just because the record didn't save.
     }
-    if (!window.PaystackPop) {
-      setError("Payment is still loading — please try again in a moment.");
-      return;
-    }
 
-    setPaying(true);
+    const message = encodeURIComponent(buildWhatsAppMessage());
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
 
-    const handler = window.PaystackPop.setup({
-      key: publicKey,
-      email,
-      amount: Math.round(total * 100), // Paystack expects kobo
-      currency: "NGN",
-      ref: `f2p_${Date.now()}`,
-      metadata: {
-        custom_fields: [
-          { display_name: "Customer Name", variable_name: "customer_name", value: name },
-          { display_name: "Phone", variable_name: "phone", value: phone },
-        ],
-      },
-      callback: (response: { reference: string }) => {
-        fetch("/api/verify-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            reference: response.reference,
-            customer: { name, phone },
-            items,
-            total,
-            deliveryType,
-            address,
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            setPaying(false);
-            if (data.success) {
-              setSuccess(true);
-              clearCart();
-            } else {
-              setError(
-                data.error ||
-                  "We couldn't confirm your payment. Please contact us on WhatsApp with your reference."
-              );
-            }
-          })
-          .catch(() => {
-            setPaying(false);
-            setError(
-              "Something went wrong confirming your payment. Please contact us on WhatsApp."
-            );
-          });
-      },
-      onClose: () => {
-        setPaying(false);
-      },
-    });
-
-    handler.openIframe();
+    setSending(false);
+    setSuccess(true);
+    clearCart();
   };
 
   if (success) {
     return (
       <section className="bg-cream px-5 py-24 text-center sm:px-12">
         <h1 className="font-display text-3xl font-semibold text-charcoal sm:text-4xl">
-          Order confirmed 🎉
+          Order sent 🎉
         </h1>
         <p className="mx-auto mt-4 max-w-md font-body text-charcoal/70">
-          Thank you! We've received your payment and your order. We'll reach
-          out on WhatsApp shortly to confirm the details.
+          We've opened WhatsApp with your order and our bank transfer
+          details. Please complete the transfer and send proof of payment
+          there so we can start preparing your order.
         </p>
         <Link
           href="/menu"
@@ -129,7 +115,6 @@ export default function Checkout() {
 
   return (
     <>
-      <Script src="https://js.paystack.co/v1/inline.js" strategy="afterInteractive" />
       <section className="bg-cream px-5 py-14 sm:px-12 sm:py-24 lg:px-20">
         <Reveal>
           <div className="mx-auto max-w-2xl">
@@ -230,7 +215,7 @@ export default function Checkout() {
                   </div>
                   <div>
                     <label className="font-body text-sm font-medium text-charcoal">
-                      Email
+                      Email <span className="font-normal text-charcoal/40">(optional)</span>
                     </label>
                     <input
                       type="email"
@@ -239,9 +224,6 @@ export default function Checkout() {
                       className="mt-1 w-full rounded-lg border border-charcoal/20 px-4 py-2.5 font-body focus:border-terracotta focus:outline-none"
                       placeholder="you@example.com"
                     />
-                    <p className="mt-1 font-body text-xs text-charcoal/40">
-                      Needed for your payment receipt.
-                    </p>
                   </div>
                   <div>
                     <label className="font-body text-sm font-medium text-charcoal">
@@ -312,24 +294,16 @@ export default function Checkout() {
                 )}
 
                 <button
-                  onClick={handlePay}
-                  disabled={!canPay || paying}
+                  onClick={handleSendOrder}
+                  disabled={!canSend || sending}
                   className="mt-8 w-full rounded-full bg-terracotta py-3.5 font-body font-semibold text-cream transition hover:bg-ember disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {paying ? "Processing..." : `Pay ${formatPrice(total)} with Paystack`}
+                  {sending ? "Sending..." : `Send Order (${formatPrice(total)}) via WhatsApp`}
                 </button>
 
                 <p className="mt-4 text-center font-body text-xs text-charcoal/40">
-                  Or{" "}
-                  <a
-                    href={`https://wa.me/${WHATSAPP_NUMBER}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline"
-                  >
-                    order via WhatsApp
-                  </a>{" "}
-                  instead.
+                  You'll get our bank transfer details on WhatsApp — send
+                  proof of payment there to confirm your order.
                 </p>
               </>
             )}

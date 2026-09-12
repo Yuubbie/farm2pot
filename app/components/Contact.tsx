@@ -21,11 +21,25 @@ export default function Contact() {
             <h2 className="font-body text-sm font-semibold uppercase tracking-wide text-ember">
               Location
             </h2>
-            {/* TODO: add real address once confirmed */}
             <p className="mt-2 font-body text-cream/85">
-              Address coming soon &mdash; check back or reach out on
-              WhatsApp for directions.
+              Kit Court Street, Harris Drive,
+              <br />
+              Ajah, Lagos
             </p>
+          </div>
+
+          <div>
+            <h2 className="font-body text-sm font-semibold uppercase tracking-wide text-ember">
+              Email
+            </h2>
+            <div className="mt-2 flex flex-col gap-1">
+              <a
+                href="mailto:farmtopotfood@gmail.com"
+                className="font-body text-cream/85 underline decoration-dotted hover:text-cream"
+              >
+                farmtopotfood@gmail.com
+              </a>
+            </div>
           </div>
 
           <div>
@@ -80,9 +94,10 @@ export default function Contact() {
             <h2 className="font-body text-sm font-semibold uppercase tracking-wide text-ember">
               Hours
             </h2>
-            {/* TODO: add real opening hours once confirmed */}
             <p className="mt-2 font-body text-cream/85">
-              Opening hours coming soon.
+              Monday &mdash; Sunday
+              <br />
+              Open 24/7
             </p>
           </div>
         </div>
