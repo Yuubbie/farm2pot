@@ -46,6 +46,8 @@ export async function getMenu(): Promise<MenuCategory[]> {
           name: i.name,
           price: i.price ?? undefined,
           image: i.image ?? undefined,
+          description: i.description ?? undefined,
+          tiers: i.tiers ?? undefined,
         })),
     }));
 

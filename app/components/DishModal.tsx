@@ -81,12 +81,37 @@ export default function DishModal({
             {item.name}
           </h2>
 
+          {item.description && (
+            <p className="mt-2 font-body text-sm text-charcoal/60">{item.description}</p>
+          )}
+
           {/* Price / Add controls */}
           <div className="mt-5">
             {pricing.type === "none" && (
               <p className="font-body text-sm italic text-charcoal/50">
                 Price not confirmed yet — ask staff or reach out on WhatsApp.
               </p>
+            )}
+
+            {pricing.type === "tiers" && (
+              <div className="flex flex-wrap gap-2">
+                {pricing.tiers.map((tier) => (
+                  <button
+                    key={tier.label}
+                    onClick={() => {
+                      addItem({
+                        id: `${category.id}-${item.name}-${tier.label}`,
+                        name: `${item.name} (${tier.label})`,
+                        price: tier.price,
+                      });
+                      flash(tier.label);
+                    }}
+                    className="flex-1 min-w-[100px] rounded-full border-2 border-terracotta py-3 font-body text-sm font-semibold text-terracotta transition hover:bg-terracotta hover:text-cream"
+                  >
+                    {added === tier.label ? "Added ✓" : `${tier.label} — ${formatPrice(tier.price)}`}
+                  </button>
+                ))}
+              </div>
             )}
 
             {pricing.type === "single" && (
@@ -152,6 +177,8 @@ export default function DishModal({
                         {sPricing.type === "single" && formatPrice(sPricing.price)}
                         {sPricing.type === "bigsmall" &&
                           `From ${formatPrice(sPricing.small)}`}
+                        {sPricing.type === "tiers" &&
+                          `${sPricing.tiers[0].label} ${formatPrice(sPricing.tiers[0].price)}`}
                         {sPricing.type === "none" && "ask staff"}
                       </span>
                     </div>

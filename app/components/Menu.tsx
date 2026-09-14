@@ -35,6 +35,22 @@ function AddControls({
     );
   }
 
+  if (pricing.type === "tiers") {
+    const first = pricing.tiers[0];
+    return (
+      <span
+        className={
+          compact
+            ? "whitespace-nowrap font-body text-sm text-ember"
+            : "whitespace-nowrap text-sm text-charcoal/60"
+        }
+      >
+        {first.label} {formatPrice(first.price)}
+        {pricing.tiers.length > 1 ? "+" : ""}
+      </span>
+    );
+  }
+
   if (pricing.type === "bigsmall") {
     return (
       <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>

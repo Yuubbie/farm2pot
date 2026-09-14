@@ -1,7 +1,9 @@
 export type MenuItem = {
   name: string;
-  price?: number; // in Naira, undefined if using category flatPrice or still unconfirmed
+  price?: number; // in Naira, undefined if using category flatPrice, tiers, or still unconfirmed
   image?: string; // optional real dish photo path
+  description?: string; // e.g. ingredient list for bulk/freezer items
+  tiers?: { label: string; price: number }[]; // e.g. 2L/3L/5L, or a single "5 PCS" tier
 };
 
 export type MenuCategory = {
@@ -24,13 +26,13 @@ export const menu: MenuCategory[] = [
     items: [
       { name: "Egusi Soup", image: "/menu-images/egusi-soup.jpg" },
       { name: "Ogbono Soup", image: "/menu-images/ogbono-soup.jpg" },
-      { name: "Okro Soup", image: "/menu-images/Okro_Soup_Real.jpg" },
-      { name: "Fisherman Soup" },
-      { name: "Oha Soup" },
-      { name: "Afia Efere (White Soup)" },
-      { name: "Efo Soup" },
+      { name: "Okro Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Okro_Soup_Real_v2.jpg" },
+      { name: "Fisherman Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Fisherman%20Soup.jpg" },
+      { name: "Oha Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Oha%20soup.jpg" },
+      { name: "Afia Efere (White Soup)", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/White%20soup.jpg" },
+      { name: "Efo Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Efo%20Soup.jpg" },
       { name: "Edikang Ikong Soup", image: "/menu-images/edikang-ikong.jpg" },
-      { name: "Afang Soup", image: "/menu-images/Afang_Soup.jpg" },
+      { name: "Afang Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Afang_Soup.jpg" },
     ],
   },
   {
@@ -39,9 +41,9 @@ export const menu: MenuCategory[] = [
     group: "Food",
     flatPrice: 2500,
     items: [
-      { name: "Eba" },
-      { name: "Semovita" },
-      { name: "Poondo Yam" },
+      { name: "Eba", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Eba.jpg" },
+      { name: "Semovita", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Semovita.jpg" },
+      { name: "Poondo Yam", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Poondo%20Yam.jpg" },
       { name: "Wheat" },
     ],
   },
@@ -53,8 +55,8 @@ export const menu: MenuCategory[] = [
       { name: "Turkey", price: 8000 },
       { name: "Chicken", price: 7000 },
       { name: "Goat Meat", price: 7000 },
-      { name: "Catfish", image: "/menu-images/Catfish.jpg" }, // price TBC
-      { name: "Croaker", image: "/menu-images/Croaker.jpg" }, // price TBC
+      { name: "Catfish", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Catfish.jpg" }, // price TBC
+      { name: "Croaker", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Croaker.jpg" }, // price TBC
       { name: "Beef" }, // price TBC
     ],
   },
@@ -68,7 +70,19 @@ export const menu: MenuCategory[] = [
       { name: "Coconut Rice" },
       { name: "Wheat Rice + Stew" },
       { name: "Noodles + Egg", price: 4000 },
-      { name: "Native Rice", image: "/menu-images/Native_Rice.jpg" }, // price TBC
+      { name: "Native Rice", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Native_Rice.jpg" }, // price TBC
+    ],
+  },
+  {
+    id: "pepper-soups",
+    name: "Pepper Soups",
+    group: "Food",
+    items: [
+      { name: "Goat Meat Pepper Soup", price: 11500 },
+      { name: "Beef Pepper Soup", price: 11500 },
+      { name: "Chicken Pepper Soup", price: 11500 },
+      { name: "Turkey Pepper Soup", price: 16500 },
+      { name: "Catfish Pepper Soup", price: 25500 },
     ],
   },
   {
@@ -129,18 +143,6 @@ export const menu: MenuCategory[] = [
     group: "Food",
     items: [
       { name: "Egg Roll", image: "/menu-images/egg-roll.jpg" }, // price TBC
-    ],
-  },
-  {
-    id: "pepper-soups",
-    name: "Pepper Soups",
-    group: "Food",
-    items: [
-      { name: "Goat Meat Pepper Soup", price: 11500 },
-      { name: "Beef Pepper Soup", price: 11500 },
-      { name: "Chicken Pepper Soup", price: 11500 },
-      { name: "Turkey Pepper Soup", price: 16500 },
-      { name: "Catfish Pepper Soup", price: 25500 },
     ],
   },
   {
