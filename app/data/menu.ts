@@ -232,7 +232,7 @@ export const menu: MenuCategory[] = [
       { name: "Sugarcane & Ginger" },
       { name: "Zobo" },
       { name: "Pineapple, Carrot & Ginger" },
-      { name: "Tigernut Drink", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Tigernut_Real.jpg" },
+      { name: "Tigernut Drink", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Tigernut_Real_v2.jpg" },
     ],
   },
   {
