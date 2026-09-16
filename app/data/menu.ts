@@ -29,7 +29,7 @@ export const menu: MenuCategory[] = [
       { name: "Okro Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Okro_Soup_Real_v2.jpg" },
       { name: "Fisherman Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Fisherman%20Soup.jpg" },
       { name: "Oha Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Oha%20soup.jpg" },
-      { name: "Afia Efere (White Soup)", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/White%20soup.jpg" },
+      { name: "Afia Efere (White Soup)", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/White_Soup_Real.jpg" },
       { name: "Efo Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Efo%20Soup.jpg" },
       { name: "Edikang Ikong Soup", image: "/menu-images/edikang-ikong.jpg" },
       { name: "Afang Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Afang_Soup.jpg" },
@@ -67,9 +67,11 @@ export const menu: MenuCategory[] = [
     items: [
       { name: "Jollof Rice", image: "/menu-images/jollof-rice.jpg" },
       { name: "Fried Rice", image: "/menu-images/fried-rice.jpg" },
-      { name: "Coconut Rice" },
+      { name: "Coconut Rice (Chicken)", price: 15500 },
+      { name: "Coconut Rice (Turkey)", price: 17500 },
+      { name: "Coconut Rice (Goatmeat)", price: 16500 },
       { name: "Wheat Rice + Stew" },
-      { name: "Noodles + Egg", price: 4000 },
+      { name: "Noodles + Egg", price: 4500 },
       { name: "Native Rice", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Native_Rice.jpg" }, // price TBC
     ],
   },
@@ -102,6 +104,8 @@ export const menu: MenuCategory[] = [
     items: [
       { name: "Grilled Chicken", price: 7000 },
       { name: "Grilled Turkey", price: 8000 },
+      { name: "Grilled Croaker (with Fries)", price: 26500 },
+      { name: "Grilled Catfish", price: 25000 },
       { name: "Suya", price: 2000 },
       { name: "Tozo", price: 2000 },
       { name: "Ram Suya (1kg)", price: 30000 },
@@ -155,7 +159,7 @@ export const menu: MenuCategory[] = [
       { name: "Goat Meat Ramen Pepper Soup", price: 15500 },
       { name: "Turkey Meat Ramen Pepper Soup", price: 16500 },
       { name: "Catfish Ramen Pepper Soup", price: 15500 },
-      { name: "Seafood Ramen Pepper Soup", price: 20000, image: "/menu-images/Seafood_Ramen_Pepper_Soup.jpg" },
+      { name: "Fisherman Soup", price: 25500, image: "/menu-images/Seafood_Ramen_Pepper_Soup.jpg" },
       {
         name: "Farm2Pot Special Ramen Pepper Soup",
         price: 22000,
@@ -223,13 +227,13 @@ export const menu: MenuCategory[] = [
     flatPrice: 4000,
     items: [
       { name: "Fresh Orange Juice" },
-      { name: "Pineapple & Ginger" },
+      { name: "Pineapple & Ginger", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Pineapple_Ginger.jpg" },
       { name: "Fresh Watermelon" },
       { name: "Pineapple & Orange" },
       { name: "Sugarcane & Ginger" },
       { name: "Zobo" },
       { name: "Pineapple, Carrot & Ginger" },
-      { name: "Tigernut Drink" },
+      { name: "Tigernut Drink", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Tigernut_Real.jpg" },
     ],
   },
   {
