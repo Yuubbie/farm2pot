@@ -27,7 +27,7 @@ export const menu: MenuCategory[] = [
       { name: "Egusi Soup", image: "/menu-images/egusi-soup.jpg" },
       { name: "Ogbono Soup", image: "/menu-images/ogbono-soup.jpg" },
       { name: "Okro Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Okro_Soup_Real_v2.jpg" },
-      { name: "Fisherman Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Fisherman%20Soup.jpg" },
+      { name: "Fisherman Soup", price: 25500, image: "/menu-images/Seafood_Ramen_Pepper_Soup.jpg" },
       { name: "Oha Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Oha%20soup.jpg" },
       { name: "Afia Efere (White Soup)", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/White_Soup_Real.jpg" },
       { name: "Efo Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Efo%20Soup.jpg" },
@@ -159,7 +159,6 @@ export const menu: MenuCategory[] = [
       { name: "Goat Meat Ramen Pepper Soup", price: 15500 },
       { name: "Turkey Meat Ramen Pepper Soup", price: 16500 },
       { name: "Catfish Ramen Pepper Soup", price: 15500 },
-      { name: "Fisherman Soup", price: 25500, image: "/menu-images/Seafood_Ramen_Pepper_Soup.jpg" },
       {
         name: "Farm2Pot Special Ramen Pepper Soup",
         price: 22000,
