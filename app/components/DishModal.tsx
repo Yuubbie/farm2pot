@@ -93,6 +93,45 @@ export default function DishModal({
               </p>
             )}
 
+            {pricing.type === "single_plus_tiers" && (
+              <div>
+                <p className="mb-2 font-body text-xs font-semibold uppercase tracking-wide text-charcoal/40">
+                  Per Plate
+                </p>
+                <button
+                  onClick={() => {
+                    addItem({ id: `${category.id}-${item.name}`, name: item.name, price: pricing.single });
+                    flash(item.name);
+                  }}
+                  className="w-full rounded-full bg-terracotta py-3 font-body font-semibold text-cream transition hover:bg-ember"
+                >
+                  {added === item.name ? "Added ✓" : `Add to Cart — ${formatPrice(pricing.single)}`}
+                </button>
+
+                <p className="mb-2 mt-4 font-body text-xs font-semibold uppercase tracking-wide text-charcoal/40">
+                  Bulk / Freezer Order
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {pricing.tiers.map((tier) => (
+                    <button
+                      key={tier.label}
+                      onClick={() => {
+                        addItem({
+                          id: `${category.id}-${item.name}-${tier.label}`,
+                          name: `${item.name} (${tier.label})`,
+                          price: tier.price,
+                        });
+                        flash(tier.label);
+                      }}
+                      className="flex-1 min-w-[100px] rounded-full border-2 border-terracotta py-3 font-body text-sm font-semibold text-terracotta transition hover:bg-terracotta hover:text-cream"
+                    >
+                      {added === tier.label ? "Added ✓" : `${tier.label} — ${formatPrice(tier.price)}`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {pricing.type === "tiers" && (
               <div className="flex flex-wrap gap-2">
                 {pricing.tiers.map((tier) => (
@@ -179,6 +218,7 @@ export default function DishModal({
                           `From ${formatPrice(sPricing.small)}`}
                         {sPricing.type === "tiers" &&
                           `${sPricing.tiers[0].label} ${formatPrice(sPricing.tiers[0].price)}`}
+                        {sPricing.type === "single_plus_tiers" && formatPrice(sPricing.single)}
                         {sPricing.type === "none" && "ask staff"}
                       </span>
                     </div>

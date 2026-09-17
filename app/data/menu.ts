@@ -24,15 +24,15 @@ export const menu: MenuCategory[] = [
     bigPrice: 2050,
     smallPrice: 1650,
     items: [
-      { name: "Egusi Soup", image: "/menu-images/egusi-soup.jpg" },
-      { name: "Ogbono Soup", image: "/menu-images/ogbono-soup.jpg" },
-      { name: "Okro Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Okro_Soup_Real_v2.jpg" },
-      { name: "Fisherman Soup", price: 25500, image: "/menu-images/Seafood_Ramen_Pepper_Soup.jpg" },
+      { name: "Egusi Soup", image: "/menu-images/egusi-soup.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 45000 }, { label: "3L", price: 65000 }, { label: "5L", price: 80000 }] },
+      { name: "Ogbono Soup", image: "/menu-images/ogbono-soup.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 45000 }, { label: "3L", price: 65000 }, { label: "5L", price: 80000 }] },
+      { name: "Okro Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Okro_Soup_Real_v2.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 55000 }, { label: "3L", price: 65000 }, { label: "5L", price: 80000 }] },
+      { name: "Fisherman Soup", price: 25500, image: "/menu-images/Seafood_Ramen_Pepper_Soup.jpg", tiers: [{ label: "2L", price: 65000 }, { label: "3L", price: 85000 }, { label: "5L", price: 120000 }] },
       { name: "Oha Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Oha%20soup.jpg" },
-      { name: "Afia Efere (White Soup)", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/White_Soup_Real.jpg" },
-      { name: "Efo Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Efo%20Soup.jpg" },
-      { name: "Edikang Ikong Soup", image: "/menu-images/edikang-ikong.jpg" },
-      { name: "Afang Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Afang_Soup.jpg" },
+      { name: "Afia Efere (White Soup)", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/White_Soup_Real.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 65000 }, { label: "3L", price: 85000 }, { label: "5L", price: 120000 }] },
+      { name: "Efo Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Efo%20Soup.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 55000 }, { label: "3L", price: 65000 }, { label: "5L", price: 80000 }] },
+      { name: "Edikang Ikong Soup", image: "/menu-images/edikang-ikong.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 45000 }, { label: "3L", price: 65000 }, { label: "5L", price: 80000 }] },
+      { name: "Afang Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Afang_Soup.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 45000 }, { label: "3L", price: 65000 }, { label: "5L", price: 80000 }] },
     ],
   },
   {
@@ -41,10 +41,10 @@ export const menu: MenuCategory[] = [
     group: "Food",
     flatPrice: 2500,
     items: [
-      { name: "Eba", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Eba.jpg" },
-      { name: "Semovita", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Semovita.jpg" },
-      { name: "Poondo Yam", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Poondo%20Yam.jpg" },
-      { name: "Wheat" },
+      { name: "Eba", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Eba.jpg", tiers: [{ label: "Regular", price: 2500 }, { label: "5 pcs (Bulk)", price: 8000 }] },
+      { name: "Semovita", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Semovita.jpg", tiers: [{ label: "Regular", price: 2500 }, { label: "5 pcs (Bulk)", price: 10000 }] },
+      { name: "Poondo Yam", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Poondo%20Yam.jpg", tiers: [{ label: "Regular", price: 2500 }, { label: "5 pcs (Bulk)", price: 10000 }] },
+      { name: "Wheat", tiers: [{ label: "Regular", price: 2500 }, { label: "5 pcs (Bulk)", price: 10000 }] },
     ],
   },
   {
@@ -52,12 +52,12 @@ export const menu: MenuCategory[] = [
     name: "Proteins",
     group: "Food",
     items: [
-      { name: "Turkey", price: 8000 },
-      { name: "Chicken", price: 7000 },
-      { name: "Goat Meat", price: 7000 },
+      { name: "Turkey", price: 8000, tiers: [{ label: "2 pcs (Bulk)", price: 12000 }] },
+      { name: "Chicken", price: 7000, tiers: [{ label: "2 pcs (Bulk)", price: 10000 }] },
+      { name: "Goat Meat", price: 7000, tiers: [{ label: "2 pcs (Bulk)", price: 9000 }] },
       { name: "Catfish", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Catfish.jpg" }, // price TBC
-      { name: "Croaker", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Croaker.jpg" }, // price TBC
-      { name: "Beef" }, // price TBC
+      { name: "Croaker", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Croaker.jpg", tiers: [{ label: "2 pcs (Bulk)", price: 10000 }] }, // per-plate price TBC
+      { name: "Beef", tiers: [{ label: "2 pcs (Bulk)", price: 6000 }] }, // per-plate price TBC
     ],
   },
   {
@@ -65,14 +65,14 @@ export const menu: MenuCategory[] = [
     name: "Rice",
     group: "Food",
     items: [
-      { name: "Jollof Rice", image: "/menu-images/jollof-rice.jpg" },
-      { name: "Fried Rice", image: "/menu-images/fried-rice.jpg" },
+      { name: "Jollof Rice", image: "/menu-images/jollof-rice.jpg", tiers: [{ label: "2L", price: 38000 }, { label: "3L", price: 48000 }, { label: "5L", price: 68000 }] },
+      { name: "Fried Rice", image: "/menu-images/fried-rice.jpg", tiers: [{ label: "2L", price: 45000 }, { label: "3L", price: 55000 }, { label: "5L", price: 65000 }] },
       { name: "Coconut Rice (Chicken)", price: 15500 },
       { name: "Coconut Rice (Turkey)", price: 17500 },
       { name: "Coconut Rice (Goatmeat)", price: 16500 },
       { name: "Wheat Rice + Stew" },
       { name: "Noodles + Egg", price: 4500 },
-      { name: "Native Rice", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Native_Rice.jpg" }, // price TBC
+      { name: "Native Rice", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Native_Rice.jpg", tiers: [{ label: "2L", price: 65000 }, { label: "3L", price: 80000 }, { label: "5L", price: 115000 }] }, // per-plate price TBC
     ],
   },
   {
@@ -80,11 +80,11 @@ export const menu: MenuCategory[] = [
     name: "Pepper Soups",
     group: "Food",
     items: [
-      { name: "Goat Meat Pepper Soup", price: 11500 },
+      { name: "Goat Meat Pepper Soup", price: 11500, tiers: [{ label: "2L", price: 45000 }, { label: "3L", price: 55000 }, { label: "5L", price: 80000 }] },
       { name: "Beef Pepper Soup", price: 11500 },
       { name: "Chicken Pepper Soup", price: 11500 },
-      { name: "Turkey Pepper Soup", price: 16500 },
-      { name: "Catfish Pepper Soup", price: 25500 },
+      { name: "Turkey Pepper Soup", price: 16500, tiers: [{ label: "2L", price: 55000 }, { label: "3L", price: 70000 }, { label: "5L", price: 100000 }] },
+      { name: "Catfish Pepper Soup", price: 25500, tiers: [{ label: "2L", price: 20000 }, { label: "3L", price: 35000 }, { label: "5L", price: 55000 }] },
     ],
   },
   {
@@ -147,6 +147,7 @@ export const menu: MenuCategory[] = [
     group: "Food",
     items: [
       { name: "Egg Roll", image: "/menu-images/egg-roll.jpg" }, // price TBC
+      { name: "Chicken Combo (Small Chops)", price: 40000, description: "Puff-puff, spring rolls, mosa, samosa, sweet potatoes, pepper chicken", image: "/menu-images/Small_Chops_Platter.jpg" },
     ],
   },
   {

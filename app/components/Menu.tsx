@@ -51,6 +51,37 @@ function AddControls({
     );
   }
 
+  if (pricing.type === "single_plus_tiers") {
+    return (
+      <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+        {!compact && (
+          <span className="whitespace-nowrap text-sm text-charcoal/60">
+            {formatPrice(pricing.single)}
+          </span>
+        )}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            addItem({ id: `${category.id}-${item.name}`, name: item.name, price: pricing.single });
+            flash();
+          }}
+          className={
+            compact
+              ? "flex h-8 w-8 items-center justify-center rounded-full bg-terracotta font-body text-lg text-cream transition hover:bg-ember"
+              : "whitespace-nowrap rounded-full bg-terracotta px-4 py-1.5 font-body text-sm font-semibold text-cream transition hover:bg-ember"
+          }
+        >
+          {added ? "✓" : compact ? "+" : `Add — ${formatPrice(pricing.single)}`}
+        </button>
+        {compact && (
+          <span className="whitespace-nowrap font-body text-sm text-ember">
+            {formatPrice(pricing.single)}
+          </span>
+        )}
+      </div>
+    );
+  }
+
   if (pricing.type === "bigsmall") {
     return (
       <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>

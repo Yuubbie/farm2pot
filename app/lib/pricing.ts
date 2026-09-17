@@ -8,9 +8,13 @@ export type Pricing =
   | { type: "single"; price: number }
   | { type: "bigsmall"; big: number; small: number }
   | { type: "tiers"; tiers: { label: string; price: number }[] }
+  | { type: "single_plus_tiers"; single: number; tiers: { label: string; price: number }[] }
   | { type: "none" };
 
 export function getPricing(item: MenuItem, category: MenuCategory): Pricing {
+  if (item.price && item.tiers && item.tiers.length > 0) {
+    return { type: "single_plus_tiers", single: item.price, tiers: item.tiers };
+  }
   if (item.tiers && item.tiers.length > 0) return { type: "tiers", tiers: item.tiers };
   if (item.price) return { type: "single", price: item.price };
   if (category.flatPrice) return { type: "single", price: category.flatPrice };
