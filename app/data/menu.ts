@@ -73,6 +73,7 @@ export const menu: MenuCategory[] = [
       { name: "Wheat Rice + Stew" },
       { name: "Noodles + Egg", price: 4500 },
       { name: "Native Rice", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Native_Rice.jpg", tiers: [{ label: "2L", price: 65000 }, { label: "3L", price: 80000 }, { label: "5L", price: 115000 }] }, // per-plate price TBC
+      { name: "Vegetable Sauce", description: "Assorted mackerel fish, served with boiled yam", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Vegetable_Sauce.jpg", tiers: [{ label: "2L", price: 55000 }, { label: "3L", price: 65000 }, { label: "5L", price: 85000 }] },
     ],
   },
   {
@@ -106,6 +107,8 @@ export const menu: MenuCategory[] = [
       { name: "Grilled Turkey", price: 8000 },
       { name: "Grilled Croaker (with Fries)", price: 26500 },
       { name: "Grilled Catfish", price: 25000 },
+      { name: "Isiewu", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Isiewu.jpg", tiers: [{ label: "2L", price: 45000 }, { label: "3L", price: 55000 }, { label: "5L", price: 80000 }] },
+      { name: "Goat Meat Platter", description: "Fried plantain, potatoes, pepper sauce", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Goatmeat_Platter.jpg", tiers: [{ label: "Bulk Platter", price: 50000 }] },
       { name: "Suya", price: 2000 },
       { name: "Tozo", price: 2000 },
       { name: "Ram Suya (1kg)", price: 30000 },
@@ -256,7 +259,7 @@ export const menu: MenuCategory[] = [
     flatPrice: 6000,
     items: [
       { name: "Yogofura", image: "/menu-images/yogofura.jpg" },
-      { name: "Plain Yogurt" },
+      { name: "Plain Yogurt", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Plain_Yogurt.jpg" },
       { name: "Yogurt with Chia Seed" },
       { name: "Banana Yogurt" },
     ],
