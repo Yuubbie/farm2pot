@@ -1,6 +1,8 @@
 import Reveal from "./Reveal";
 
-const WHATSAPP_NUMBER = "2347032727893"; // Current Farm2Pot ordering line
+const ORDER_WHATSAPP_1 = "2348162470726"; // primary order line
+const ORDER_WHATSAPP_2 = "2348176554823"; // secondary order line
+const COMPLAINTS_WHATSAPP = "2348186304735";
 
 export default function Contact() {
   return (
@@ -48,12 +50,28 @@ export default function Contact() {
             </h2>
             <div className="mt-2 flex flex-col gap-1">
               <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                href={`https://wa.me/${ORDER_WHATSAPP_1}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-body text-cream/85 underline decoration-dotted hover:text-cream"
               >
-                Chat with us
+                Order — 0816 247 0726
+              </a>
+              <a
+                href={`https://wa.me/${ORDER_WHATSAPP_2}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-body text-cream/85 underline decoration-dotted hover:text-cream"
+              >
+                Order — 0817 655 4823
+              </a>
+              <a
+                href={`https://wa.me/${COMPLAINTS_WHATSAPP}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-body text-cream/85 underline decoration-dotted hover:text-cream"
+              >
+                For complaints — 0818 630 4735
               </a>
             </div>
           </div>

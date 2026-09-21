@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCart } from "../context/CartContext";
 import Reveal from "./Reveal";
 
-const WHATSAPP_NUMBER = "2347032727893";
+const WHATSAPP_NUMBER = "2348162470726"; // primary order line
 
 // Manual bank transfer details — Paystack is switched off for now until the
 // client sets up her own Paystack account. This is the fallback payment
