@@ -30,7 +30,7 @@ export const menu: MenuCategory[] = [
       { name: "Fisherman Soup", price: 25500, image: "/menu-images/Seafood_Ramen_Pepper_Soup.jpg", tiers: [{ label: "2L", price: 65000 }, { label: "3L", price: 85000 }, { label: "5L", price: 120000 }] },
       { name: "Oha Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Oha%20soup.jpg" },
       { name: "Afia Efere (White Soup)", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/White_Soup_Real.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 65000 }, { label: "3L", price: 85000 }, { label: "5L", price: 120000 }] },
-      { name: "Efo Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Efo%20Soup.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 55000 }, { label: "3L", price: 65000 }, { label: "5L", price: 80000 }] },
+      { name: "Efo Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Efo_Soup_Real.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 55000 }, { label: "3L", price: 65000 }, { label: "5L", price: 80000 }] },
       { name: "Edikang Ikong Soup", image: "/menu-images/edikang-ikong.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 45000 }, { label: "3L", price: 65000 }, { label: "5L", price: 80000 }] },
       { name: "Afang Soup", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Afang_Soup.jpg", tiers: [{ label: "Big", price: 2050 }, { label: "Small", price: 1650 }, { label: "2L", price: 45000 }, { label: "3L", price: 65000 }, { label: "5L", price: 80000 }] },
     ],
@@ -65,14 +65,16 @@ export const menu: MenuCategory[] = [
     name: "Rice",
     group: "Food",
     items: [
-      { name: "Jollof Rice", image: "/menu-images/jollof-rice.jpg", tiers: [{ label: "2L", price: 38000 }, { label: "3L", price: 48000 }, { label: "5L", price: 68000 }] },
+      { name: "Jollof Rice", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Jollof_Rice_Real.jpg", tiers: [{ label: "2L", price: 38000 }, { label: "3L", price: 48000 }, { label: "5L", price: 68000 }] },
+      { name: "Seafood Jollof", description: "Prawns, snail, calamari, crab", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Seafood_Jollof.jpg", tiers: [{ label: "2L", price: 65000 }, { label: "3L", price: 80000 }, { label: "5L", price: 115000 }] },
       { name: "Fried Rice", image: "/menu-images/fried-rice.jpg", tiers: [{ label: "2L", price: 45000 }, { label: "3L", price: 55000 }, { label: "5L", price: 65000 }] },
       { name: "Coconut Rice (Chicken)", price: 15500 },
       { name: "Coconut Rice (Turkey)", price: 17500 },
       { name: "Coconut Rice (Goatmeat)", price: 16500 },
       { name: "Wheat Rice + Stew" },
       { name: "Noodles + Egg", price: 4500 },
-      { name: "Native Rice", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Native_Rice.jpg", tiers: [{ label: "2L", price: 65000 }, { label: "3L", price: 80000 }, { label: "5L", price: 115000 }] }, // per-plate price TBC
+      { name: "Native Rice", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Native_Rice_v2.jpg", tiers: [{ label: "2L", price: 65000 }, { label: "3L", price: 80000 }, { label: "5L", price: 115000 }] }, // per-plate price TBC
+      { name: "Ofada Sauce", description: "Assorted, egg, fish, beef", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Ofada_Sauce.jpg", tiers: [{ label: "2L", price: 50000 }, { label: "3L", price: 60000 }, { label: "5L", price: 75000 }] },
       { name: "Vegetable Sauce", description: "Assorted mackerel fish, served with boiled yam", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Vegetable_Sauce.jpg", tiers: [{ label: "2L", price: 55000 }, { label: "3L", price: 65000 }, { label: "5L", price: 85000 }] },
     ],
   },
