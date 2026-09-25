@@ -44,7 +44,7 @@ export const menu: MenuCategory[] = [
       { name: "Eba", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Eba.jpg", tiers: [{ label: "Regular", price: 2500 }, { label: "5 pcs (Bulk)", price: 8000 }] },
       { name: "Semovita", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Semovita.jpg", tiers: [{ label: "Regular", price: 2500 }, { label: "5 pcs (Bulk)", price: 10000 }] },
       { name: "Poondo Yam", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Poondo%20Yam.jpg", tiers: [{ label: "Regular", price: 2500 }, { label: "5 pcs (Bulk)", price: 10000 }] },
-      { name: "Wheat", tiers: [{ label: "Regular", price: 2500 }, { label: "5 pcs (Bulk)", price: 10000 }] },
+      { name: "Wheat", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Wheat_Swallow.jpg", tiers: [{ label: "Regular", price: 2500 }, { label: "5 pcs (Bulk)", price: 10000 }] },
     ],
   },
   {
@@ -52,9 +52,9 @@ export const menu: MenuCategory[] = [
     name: "Proteins",
     group: "Food",
     items: [
-      { name: "Turkey", price: 8000, tiers: [{ label: "2 pcs (Bulk)", price: 12000 }] },
-      { name: "Chicken", price: 7000, tiers: [{ label: "2 pcs (Bulk)", price: 10000 }] },
-      { name: "Goat Meat", price: 7000, tiers: [{ label: "2 pcs (Bulk)", price: 9000 }] },
+      { name: "Turkey", price: 8000, image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Turkey_Protein.jpg", tiers: [{ label: "2 pcs (Bulk)", price: 12000 }] },
+      { name: "Chicken", price: 7000, image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Chicken_Protein.jpg", tiers: [{ label: "2 pcs (Bulk)", price: 10000 }] },
+      { name: "Goat Meat", price: 7000, image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Goat_Meat_Protein.jpg", tiers: [{ label: "2 pcs (Bulk)", price: 9000 }] },
       { name: "Catfish", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Catfish.jpg" }, // price TBC
       { name: "Croaker", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Croaker.jpg", tiers: [{ label: "2 pcs (Bulk)", price: 10000 }] }, // per-plate price TBC
       { name: "Beef", tiers: [{ label: "2 pcs (Bulk)", price: 6000 }] }, // per-plate price TBC
@@ -69,10 +69,10 @@ export const menu: MenuCategory[] = [
       { name: "Seafood Jollof", description: "Prawns, snail, calamari, crab", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Seafood_Jollof.jpg", tiers: [{ label: "2L", price: 65000 }, { label: "3L", price: 80000 }, { label: "5L", price: 115000 }] },
       { name: "Fried Rice", image: "/menu-images/fried-rice.jpg", tiers: [{ label: "2L", price: 45000 }, { label: "3L", price: 55000 }, { label: "5L", price: 65000 }] },
       { name: "Coconut Rice (Chicken)", price: 15500 },
-      { name: "Coconut Rice (Turkey)", price: 17500 },
+      { name: "Coconut Rice (Turkey)", price: 17500, image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Coconut_Rice_Turkey.jpg" },
       { name: "Coconut Rice (Goatmeat)", price: 16500 },
-      { name: "Wheat Rice + Stew" },
-      { name: "Noodles + Egg", price: 4500 },
+      { name: "White Rice and Stew", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/White_Rice_Stew.jpg" },
+      { name: "Noodles + Egg", price: 4500, image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Noodles_Egg.jpg" },
       { name: "Native Rice", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Native_Rice_v2.jpg", tiers: [{ label: "2L", price: 65000 }, { label: "3L", price: 80000 }, { label: "5L", price: 115000 }] }, // per-plate price TBC
       { name: "Ofada Sauce", description: "Assorted, egg, fish, beef", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Ofada_Sauce.jpg", tiers: [{ label: "2L", price: 50000 }, { label: "3L", price: 60000 }, { label: "5L", price: 75000 }] },
       { name: "Vegetable Sauce", description: "Assorted mackerel fish, served with boiled yam", image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Vegetable_Sauce.jpg", tiers: [{ label: "2L", price: 55000 }, { label: "3L", price: 65000 }, { label: "5L", price: 85000 }] },
@@ -83,11 +83,11 @@ export const menu: MenuCategory[] = [
     name: "Pepper Soups",
     group: "Food",
     items: [
-      { name: "Goat Meat Pepper Soup", price: 11500, tiers: [{ label: "2L", price: 45000 }, { label: "3L", price: 55000 }, { label: "5L", price: 80000 }] },
-      { name: "Beef Pepper Soup", price: 11500 },
-      { name: "Chicken Pepper Soup", price: 11500 },
-      { name: "Turkey Pepper Soup", price: 16500, tiers: [{ label: "2L", price: 55000 }, { label: "3L", price: 70000 }, { label: "5L", price: 100000 }] },
-      { name: "Catfish Pepper Soup", price: 25500, tiers: [{ label: "2L", price: 20000 }, { label: "3L", price: 35000 }, { label: "5L", price: 55000 }] },
+      { name: "Goat Meat Pepper Soup", price: 11500, image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Goat_Meat_Pepper_Soup.jpg", tiers: [{ label: "2L", price: 45000 }, { label: "3L", price: 55000 }, { label: "5L", price: 80000 }] },
+      { name: "Beef Pepper Soup", price: 11500, image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Beef_Pepper_Soup.jpg" },
+      { name: "Chicken Pepper Soup", price: 11500, image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Chicken_Pepper_Soup.jpg" },
+      { name: "Turkey Pepper Soup", price: 16500, image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Turkey_Pepper_Soup.jpg", tiers: [{ label: "2L", price: 55000 }, { label: "3L", price: 70000 }, { label: "5L", price: 100000 }] },
+      { name: "Catfish Pepper Soup", price: 25500, image: "https://udjushobeawcltcotwrt.supabase.co/storage/v1/object/public/menu-images/Catfish_Pepper_Soup.jpg", tiers: [{ label: "2L", price: 20000 }, { label: "3L", price: 35000 }, { label: "5L", price: 55000 }] },
     ],
   },
   {
