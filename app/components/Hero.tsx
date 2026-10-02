@@ -10,9 +10,9 @@ export default function Hero() {
     <section
       className="relative isolate overflow-hidden"
       aria-labelledby="hero-title"
-      style={{ minHeight: "100svh" }}
+      style={{ height: "100svh" }}
     >
-      {/* Background image - the new food photograph */}
+      {/* Background image */}
       <div className="absolute inset-0 -z-10">
         <Image
           src="/hero.png"
@@ -24,8 +24,8 @@ export default function Hero() {
           quality={90}
         />
         {/* Natural gradient overlay for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-r from-charcoal/80 via-charcoal/40 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-charcoal/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-charcoal/85 via-charcoal/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-transparent to-charcoal/30" />
       </div>
 
       {/* Subtle grain texture overlay */}
@@ -37,14 +37,13 @@ export default function Hero() {
         }}
       />
 
-      {/* Floating particles - natural movement */}
+      {/* Floating particles */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         {[
           { x: "10%", y: "20%", size: 6, delay: 0 },
           { x: "80%", y: "30%", size: 4, delay: 2 },
           { x: "20%", y: "70%", size: 8, delay: 4 },
           { x: "90%", y: "60%", size: 5, delay: 1 },
-          { x: "50%", y: "10%", size: 3, delay: 3 },
         ].map((leaf, i) => (
           <motion.div
             key={i}
@@ -70,26 +69,11 @@ export default function Hero() {
         ))}
       </div>
 
-      <div className="relative flex min-h-[100svh] flex-col items-center justify-center px-5 py-20 sm:px-12 lg:px-20">
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-cream/50"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.5, duration: 0.8 }}
-        >
-          <span className="text-xs uppercase tracking-[0.2em] font-body">Scroll to explore</span>
-          <motion.div
-            className="w-px h-8 bg-gradient-to-b from-terracotta/60 to-transparent"
-            animate={{ scaleY: [1, 0.3, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
-
-        <div className="relative z-10 w-full max-w-5xl">
+      <div className="relative flex h-full flex-col justify-center px-5 sm:px-12 lg:px-20">
+        <div className="w-full max-w-5xl">
           {/* Eyebrow */}
           <motion.div
-            className="inline-flex items-center gap-3 mb-6"
+            className="inline-flex items-center gap-3 mb-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
@@ -104,7 +88,7 @@ export default function Hero() {
           {/* Main headline */}
           <h1
             id="hero-title"
-            className="flex flex-col gap-2 overflow-hidden"
+            className="flex flex-col gap-1 overflow-hidden"
           >
             {[
               { text: "Taste", delay: 0.4 },
@@ -115,7 +99,7 @@ export default function Hero() {
                 key={i}
                 className="font-display uppercase leading-[0.95] text-cream"
                 style={{
-                  fontSize: "clamp(3rem, 8vw, 7rem)",
+                  fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
                   lineHeight: "0.95",
                   fontWeight: 600,
                   letterSpacing: "-0.02em",
@@ -131,8 +115,8 @@ export default function Hero() {
 
           {/* Subheadline */}
           <motion.p
-            className="mt-8 max-w-xl font-body text-cream/80 leading-relaxed"
-            style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}
+            className="mt-5 max-w-lg font-body text-cream/80 leading-relaxed"
+            style={{ fontSize: "clamp(0.95rem, 1.2vw, 1.1rem)" }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
@@ -143,7 +127,7 @@ export default function Hero() {
 
           {/* Trust badges */}
           <motion.div
-            className="mt-10 flex flex-wrap items-center gap-6"
+            className="mt-6 flex flex-wrap items-center gap-5"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.3, duration: 0.8 }}
@@ -168,14 +152,14 @@ export default function Hero() {
 
           {/* CTA Group */}
           <motion.div
-            className="mt-12 flex flex-col items-center gap-4 sm:flex-row"
+            className="mt-8 flex flex-col items-center gap-3 sm:flex-row"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.6, duration: 0.8, ease: "easeOut" }}
           >
             <Link
               href="/menu"
-              className="group relative inline-flex items-center gap-3 rounded-full bg-terracotta px-8 py-4 text-base font-body font-semibold text-cream transition-all duration-500 hover:bg-ember hover:shadow-[0_0_50px_rgba(242,185,11,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal"
+              className="group relative inline-flex items-center gap-3 rounded-full bg-terracotta px-7 py-3.5 text-base font-body font-semibold text-cream transition-all duration-500 hover:bg-ember hover:shadow-[0_0_50px_rgba(242,185,11,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal"
             >
               <span>Explore Menu</span>
               <motion.span
@@ -188,15 +172,15 @@ export default function Hero() {
             </Link>
             <Link
               href="/checkout"
-              className="group inline-flex items-center gap-3 rounded-full border border-cream/20 px-8 py-4 text-base font-body font-semibold text-cream/80 transition-all duration-500 hover:border-cream/40 hover:text-cream hover:bg-cream/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal"
+              className="group inline-flex items-center gap-3 rounded-full border border-cream/20 px-7 py-3.5 text-base font-body font-semibold text-cream/80 transition-all duration-500 hover:border-cream/40 hover:text-cream hover:bg-cream/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal"
             >
               <span>Order Now</span>
             </Link>
           </motion.div>
 
-          {/* Stats bar */}
+          {/* Stats bar - compact, integrated at bottom */}
           <motion.div
-            className="mt-24 grid grid-cols-2 gap-8 sm:grid-cols-4 max-w-2xl mx-auto"
+            className="mt-10 flex items-center justify-center gap-8 sm:gap-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2, duration: 0.8 }}
@@ -214,10 +198,10 @@ export default function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 2 + i * 0.1, duration: 0.5 }}
               >
-                <div className="font-display text-3xl sm:text-4xl font-semibold text-cream/90">
+                <div className="font-display text-2xl sm:text-3xl font-semibold text-cream/90">
                   {stat.value}
                 </div>
-                <div className="mt-1 font-body text-xs uppercase tracking-[0.15em] text-cream/40">
+                <div className="mt-0.5 font-body text-[10px] uppercase tracking-[0.15em] text-cream/40">
                   {stat.label}
                 </div>
               </motion.div>
