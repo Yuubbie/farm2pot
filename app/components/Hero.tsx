@@ -12,72 +12,116 @@ export default function Hero() {
       aria-labelledby="hero-title"
       style={{ minHeight: "100svh" }}
     >
-      {/* Animated background blobs */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <motion.div
-          className="absolute top-1/4 left-10 w-72 h-72 rounded-full bg-terracotta/15 blur-3xl"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
-          style={{ filter: "blur(64px)" }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-10 w-96 h-96 rounded-full bg-forest/15 blur-3xl"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.5, delay: 0.6, ease: "easeOut" }}
-          style={{ filter: "blur(64px)" }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-ember/10 blur-3xl"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.5 }}
-          transition={{ duration: 2, delay: 0.9, ease: "easeOut" }}
-          style={{ filter: "blur(128px)" }}
-        />
-      </div>
-
-      {/* Background video/image with gradient overlay */}
+      {/* Organic gradient background - natural earth tones */}
       <div className="absolute inset-0 -z-10">
-        <Image
-          src="/hero.png"
-          alt=""
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-          quality={90}
+        <div
+          className="absolute inset-0"
           style={{
-            animation: "heroZoom 20s ease-out forwards",
-            transformOrigin: "center center",
+            background: `
+              radial-gradient(ellipse 80% 60% at 20% 10%, rgba(27, 74, 50, 0.9) 0%, transparent 50%),
+              radial-gradient(ellipse 60% 80% at 80% 90%, rgba(34, 100, 64, 0.7) 0%, transparent 50%),
+              radial-gradient(ellipse 40% 40% at 50% 50%, rgba(242, 185, 11, 0.08) 0%, transparent 60%),
+              linear-gradient(160deg, #1B4A32 0%, #0F2D1F 40%, #1B4A32 70%, #0A1F14 100%)
+            `,
           }}
         />
-        {/* Multi-layer gradient for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/20 to-charcoal/90" />
-        <div className="absolute inset-0 bg-gradient-to-r from-charcoal/70 via-transparent to-charcoal/40" />
-        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-charcoal/95 to-transparent" />
       </div>
 
-      {/* Floating decorative particles */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        {[1, 2, 3, 4, 5].map((i) => (
+      {/* Subtle grain texture overlay - natural feel */}
+      <div
+        className="absolute inset-0 -z-10 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundSize: "256px 256px",
+        }}
+      />
+
+      {/* Organic floating shapes - natural movement */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        {/* Large soft blob - top left */}
+        <motion.div
+          className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(242, 185, 11, 0.12) 0%, transparent 70%)",
+            filter: "blur(80px)",
+          }}
+          animate={{
+            x: [0, 30, 0],
+            y: [0, 20, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Medium blob - bottom right */}
+        <motion.div
+          className="absolute -bottom-48 -right-48 w-[600px] h-[600px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(34, 100, 64, 0.25) 0%, transparent 70%)",
+            filter: "blur(100px)",
+          }}
+          animate={{
+            x: [0, -40, 0],
+            y: [0, -30, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Small accent blob - center right */}
+        <motion.div
+          className="absolute top-1/3 right-1/4 w-[300px] h-[300px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(246, 217, 92, 0.1) 0%, transparent 70%)",
+            filter: "blur(60px)",
+          }}
+          animate={{
+            x: [0, 20, 0],
+            y: [0, -25, 0],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Floating leaf particles - natural movement */}
+        {[
+          { x: "15%", y: "20%", size: 8, delay: 0 },
+          { x: "75%", y: "30%", size: 6, delay: 2 },
+          { x: "25%", y: "70%", size: 10, delay: 4 },
+          { x: "85%", y: "60%", size: 7, delay: 1 },
+          { x: "50%", y: "15%", size: 5, delay: 3 },
+          { x: "60%", y: "80%", size: 9, delay: 5 },
+        ].map((leaf, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 rounded-full bg-terracotta/30"
+            className="absolute rounded-full"
             style={{
-              left: `${10 + i * 18}%`,
-              top: `${20 + (i * 13) % 60}%`,
+              left: leaf.x,
+              top: leaf.y,
+              width: leaf.size,
+              height: leaf.size,
+              background: "rgba(242, 185, 11, 0.15)",
             }}
-            initial={{ opacity: 0, scale: 0 }}
             animate={{
-              opacity: [0, 0.6, 0],
-              scale: [0, 1, 0],
-              y: [0, -100, -200],
-              x: [0, (i % 2 === 0 ? 50 : -50), (i % 2 === 0 ? 100 : -100)],
+              y: [0, -30, 0],
+              x: [0, (i % 2 === 0 ? 15 : -15), 0],
+              rotate: [0, 180, 360],
+              opacity: [0.3, 0.7, 0.3],
             }}
             transition={{
-              duration: 8 + i,
-              delay: i * 1.5,
+              duration: 8 + i * 2,
+              delay: leaf.delay,
               repeat: Infinity,
               ease: "easeInOut",
             }}
@@ -85,137 +129,125 @@ export default function Hero() {
         ))}
       </div>
 
+      {/* Subtle vignette for depth */}
+      <div
+        className="absolute inset-0 -z-10 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 70% 60% at 50% 40%, transparent 0%, rgba(10, 31, 20, 0.4) 100%)",
+        }}
+      />
+
       <div className="relative flex min-h-[100svh] flex-col items-center justify-center px-5 py-20 sm:px-12 lg:px-20">
         {/* Scroll indicator */}
         <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-cream/60"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-cream/50"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.5, duration: 0.8 }}
         >
           <span className="text-xs uppercase tracking-[0.2em] font-body">Scroll to explore</span>
           <motion.div
-            className="w-1 h-8 rounded-full bg-terracotta/40 relative overflow-hidden"
-            animate={{ scaleY: [1, 0.2, 1] }}
+            className="w-px h-8 bg-gradient-to-b from-terracotta/60 to-transparent"
+            animate={{ scaleY: [1, 0.3, 1] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <motion.div
-              className="absolute inset-0 bg-cream"
-              animate={{ y: ["-100%", "100%"] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </motion.div>
+          />
         </motion.div>
 
         <div className="relative z-10 w-full max-w-5xl">
-          {/* Eyebrow with animated sparkles */}
+          {/* Eyebrow - natural, understated */}
           <motion.div
-            className="inline-flex items-center gap-3 rounded-full bg-cream/10 backdrop-blur-sm border border-cream/20 px-5 py-2 mb-6"
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 100, damping: 15 }}
+            className="inline-flex items-center gap-3 mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
           >
-            <motion.span
-              className="relative flex h-6 w-6 items-center justify-center"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            >
-              <Sparkles className="h-4 w-4 text-terracotta" />
-            </motion.span>
-            <span className="font-body text-xs uppercase tracking-[0.25em] text-ember">
+            <span className="h-px w-8 bg-terracotta/40" />
+            <span className="font-body text-xs uppercase tracking-[0.3em] text-ember/80">
               Nigerian Kitchen & Grill
             </span>
-            <motion.span
-              className="relative flex h-6 w-6 items-center justify-center"
-              animate={{ rotate: -360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            >
-              <Sparkles className="h-4 w-4 text-terracotta" />
-            </motion.span>
+            <span className="h-px w-8 bg-terracotta/40" />
           </motion.div>
 
-          {/* Main headline - split lines for staggered animation */}
+          {/* Main headline - elegant, natural typography */}
           <h1
             id="hero-title"
-            className="flex flex-col gap-1 overflow-hidden"
+            className="flex flex-col gap-2 overflow-hidden"
           >
             {[
               { text: "Taste", delay: 0.4 },
-              { text: "The", delay: 0.5 },
-              { text: <span className="text-terracotta">Best</span>, delay: 0.6 },
+              { text: "The", delay: 0.55 },
+              { text: <span className="text-terracotta">Best</span>, delay: 0.7 },
             ].map(({ text, delay }, i) => (
               <motion.span
                 key={i}
-                className="font-display uppercase leading-[0.92] text-cream"
+                className="font-display uppercase leading-[0.95] text-cream"
                 style={{
-                  fontSize: "clamp(2.5rem, 7vw, 6rem)",
-                  lineHeight: "0.92",
+                  fontSize: "clamp(3rem, 8vw, 7rem)",
+                  lineHeight: "0.95",
                   fontWeight: 600,
                   letterSpacing: "-0.02em",
                 }}
-                initial={{ opacity: 0, y: 60, rotateX: -20, filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
-                transition={{ delay, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay, duration: 1, ease: [0.16, 1, 0.3, 1] }}
               >
                 {text}
               </motion.span>
             ))}
           </h1>
 
-          {/* Subheadline */}
+          {/* Subheadline - warm, inviting */}
           <motion.p
-            className="mt-6 max-w-2xl font-body text-cream/80 leading-relaxed"
-            style={{ fontSize: "clamp(1rem, 2vw, 1.25rem)" }}
-            initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ delay: 0.9, duration: 0.7, ease: "easeOut" }}
+            className="mt-8 max-w-xl font-body text-cream/70 leading-relaxed"
+            style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
           >
             Fresh ingredients, real hospitality, and a menu that goes from
             Sunday soup pots to Friday-night cocktails.
           </motion.p>
 
-          {/* Trust badges */}
+          {/* Trust badges - subtle, natural */}
           <motion.div
-            className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:justify-start"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1, duration: 0.6, staggerChildren: 0.1 }}
+            className="mt-10 flex flex-wrap items-center gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.3, duration: 0.8 }}
           >
             {[
-              { icon: Leaf, label: "Fresh Daily", delay: 0 },
-              { icon: Truck, label: "24/7 Delivery", delay: 0.1 },
-              { icon: Shield, label: "Quality Guaranteed", delay: 0.2 },
-            ].map(({ icon: Icon, label, delay }, i) => (
+              { icon: Leaf, label: "Fresh Daily" },
+              { icon: Truck, label: "24/7 Service" },
+              { icon: Shield, label: "Quality Guaranteed" },
+            ].map(({ icon: Icon, label }, i) => (
               <motion.div
                 key={label}
-                className="flex items-center gap-2 text-sm font-body text-cream/70"
-                initial={{ opacity: 0, y: 20 }}
+                className="flex items-center gap-2 text-sm font-body text-cream/50"
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1 + delay, duration: 0.5 }}
+                transition={{ delay: 1.4 + i * 0.1, duration: 0.5 }}
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-cream/10 backdrop-blur-sm">
-                  <Icon className="h-4 w-4 text-terracotta" />
-                </div>
+                <Icon className="h-4 w-4 text-terracotta/60" />
                 <span>{label}</span>
               </motion.div>
             ))}
           </motion.div>
 
-          {/* CTA Group */}
+          {/* CTA Group - natural, inviting buttons */}
           <motion.div
-            className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
-            initial={{ opacity: 0, y: 30 }}
+            className="mt-12 flex flex-col items-center gap-4 sm:flex-row"
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.3, type: "spring", stiffness: 100, damping: 15 }}
+            transition={{ delay: 1.6, duration: 0.8, ease: "easeOut" }}
           >
             <Link
               href="/menu"
-              className="group relative inline-flex items-center gap-3 rounded-full bg-terracotta px-8 py-4 text-base font-body font-semibold text-cream transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(242,185,11,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal"
+              className="group relative inline-flex items-center gap-3 rounded-full bg-terracotta px-8 py-4 text-base font-body font-semibold text-cream transition-all duration-500 hover:bg-ember hover:shadow-[0_0_50px_rgba(242,185,11,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal"
             >
               <span>Explore Menu</span>
               <motion.span
-                className="flex h-6 w-6 items-center justify-center"
-                whileHover={{ x: 6, rotate: 45 }}
+                className="flex h-5 w-5 items-center justify-center"
+                whileHover={{ x: 4 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 <ArrowRight className="h-4 w-4" />
@@ -223,19 +255,18 @@ export default function Hero() {
             </Link>
             <Link
               href="/checkout"
-              className="group relative inline-flex items-center gap-3 rounded-full border-2 border-cream/30 px-8 py-4 text-base font-body font-semibold text-cream transition-all duration-300 hover:border-cream hover:bg-cream/10 hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal"
+              className="group inline-flex items-center gap-3 rounded-full border border-cream/20 px-8 py-4 text-base font-body font-semibold text-cream/80 transition-all duration-500 hover:border-cream/40 hover:text-cream hover:bg-cream/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal"
             >
               <span>Order Now</span>
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </motion.div>
 
-          {/* Stats bar */}
+          {/* Stats bar - understated elegance */}
           <motion.div
-            className="mt-20 grid grid-cols-2 gap-8 sm:grid-cols-4 max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.6, duration: 0.7 }}
+            className="mt-24 grid grid-cols-2 gap-8 sm:grid-cols-4 max-w-2xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2, duration: 0.8 }}
           >
             {[
               { value: "50+", label: "Dishes" },
@@ -246,14 +277,14 @@ export default function Hero() {
               <motion.div
                 key={stat.label}
                 className="text-center"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.6 + i * 0.08, duration: 0.5 }}
+                transition={{ delay: 2 + i * 0.1, duration: 0.5 }}
               >
-                <div className="font-display text-3xl sm:text-4xl font-bold text-cream">
+                <div className="font-display text-3xl sm:text-4xl font-semibold text-cream/90">
                   {stat.value}
                 </div>
-                <div className="mt-1 font-body text-xs uppercase tracking-[0.15em] text-cream/50">
+                <div className="mt-1 font-body text-xs uppercase tracking-[0.15em] text-cream/40">
                   {stat.label}
                 </div>
               </motion.div>
