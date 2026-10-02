@@ -36,10 +36,20 @@ create table if not exists orders (
   paystack_reference text
 );
 
+-- FAVORITES: user's saved favorite dishes
+create table if not exists favorites (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  menu_item_id uuid not null references menu_items(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  unique (user_id, menu_item_id)
+);
+
 -- Row Level Security
 alter table categories enable row level security;
 alter table menu_items enable row level security;
 alter table orders enable row level security;
+alter table favorites enable row level security;
 
 -- Menu data is public — anyone can read it (needed for the website to display the menu)
 create policy "Public can read categories" on categories
@@ -52,3 +62,13 @@ create policy "Public can read menu items" on menu_items
 -- but nobody can read/update/delete via the public API — that stays admin-only in the Supabase dashboard.
 create policy "Public can insert orders" on orders
   for insert with check (true);
+
+-- Favorites: users can only see and manage their own favorites
+create policy "Users can view own favorites" on favorites
+  for select using (auth.uid() = user_id);
+
+create policy "Users can insert own favorites" on favorites
+  for insert with check (auth.uid() = user_id);
+
+create policy "Users can delete own favorites" on favorites
+  for delete using (auth.uid() = user_id);
