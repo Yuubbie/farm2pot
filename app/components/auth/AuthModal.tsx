@@ -37,6 +37,33 @@ function useAuthModal() {
   return state;
 }
 
+function getErrorMessage(error: { message: string } | null): string {
+  if (!error) return "";
+  const msg = error.message.toLowerCase();
+  if (msg.includes("already registered") || msg.includes("already exists")) {
+    return "This email is already registered. Try signing in instead.";
+  }
+  if (msg.includes("invalid email")) {
+    return "Please enter a valid email address.";
+  }
+  if (msg.includes("password") && msg.includes("short")) {
+    return "Password must be at least 6 characters.";
+  }
+  if (msg.includes("invalid login credentials") || msg.includes("invalid email or password")) {
+    return "Invalid email or password. Please try again.";
+  }
+  if (msg.includes("email not confirmed")) {
+    return "Please check your email and confirm your account before signing in.";
+  }
+  if (msg.includes("rate limit") || msg.includes("too many")) {
+    return "Too many attempts. Please wait a moment and try again.";
+  }
+  if (msg.includes("network") || msg.includes("fetch")) {
+    return "Network error. Please check your connection and try again.";
+  }
+  return error.message;
+}
+
 export default function AuthModal() {
   const { signIn, signUp, resetPassword, loading: authLoading } = useAuth();
   const { isOpen, mode: initialMode } = useAuthModal();
@@ -85,13 +112,13 @@ export default function AuthModal() {
       }
 
       if (result.error) {
-        setError(result.error.message);
+        setError(getErrorMessage(result.error));
       } else {
         if (mode === "reset") {
           setSuccess("Password reset email sent! Check your inbox.");
           setMode("signin");
         } else if (mode === "signup") {
-          setSuccess("Account created! Please check your email to verify.");
+          setSuccess("Account created! Please check your email to verify your account.");
           setMode("signin");
         } else {
           closeAuthModal();
