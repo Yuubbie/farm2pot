@@ -1,7 +1,9 @@
 import Link from "next/link";
 
 const DEVELOPER_WHATSAPP = "2347032352158";
-const WHATSAPP_NUMBER = "2348162470726"; // primary order line
+const WHATSAPP_NUMBER = "2348162470726";
+const WHATSAPP_NUMBER_2 = "2348176554823";
+const COMPLAINTS_WHATSAPP = "2348186304735";
 
 const columns = [
   {
@@ -18,13 +20,6 @@ const columns = [
     links: [
       { label: "About", href: "/about" },
       { label: "Contact", href: "/contact" },
-    ],
-  },
-  {
-    heading: "Contact",
-    links: [
-      { label: "Chat on WhatsApp", href: `https://wa.me/${WHATSAPP_NUMBER}`, external: true },
-      // TODO: add email once confirmed
     ],
   },
 ];
@@ -57,9 +52,9 @@ export default function Footer() {
   return (
     <footer className="bg-charcoal px-5 pb-6 pt-14 sm:px-12 sm:pt-20 lg:px-20">
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-5 sm:gap-6">
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-6">
           {/* Brand column */}
-          <div className="col-span-2 sm:col-span-2">
+          <div className="col-span-2 sm:col-span-1">
             <Link
               href="/"
               className="flex items-center gap-2 font-display text-lg font-semibold text-cream"
@@ -78,65 +73,129 @@ export default function Footer() {
             </p>
           </div>
 
+          {/* Menu links */}
           {columns.map((col) => (
             <div key={col.heading}>
               <h3 className="font-body text-xs font-semibold uppercase tracking-[0.15em] text-terracotta">
                 {col.heading}
               </h3>
               <ul className="mt-4 space-y-3">
-                {col.links.map((l) =>
-                  l.external ? (
-                    <li key={l.label}>
-                      <a
-                        href={l.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-body text-sm text-cream/60 transition hover:text-cream"
-                      >
-                        {l.label}
-                      </a>
-                    </li>
-                  ) : (
-                    <li key={l.label}>
-                      <Link
-                        href={l.href}
-                        className="font-body text-sm text-cream/60 transition hover:text-cream"
-                      >
-                        {l.label}
-                      </Link>
-                    </li>
-                  )
-                )}
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    <Link
+                      href={l.href}
+                      className="font-body text-sm text-cream/60 transition hover:text-cream"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           ))}
 
-          {/* Follow column, with icons */}
+          {/* Contact column */}
           <div>
             <h3 className="font-body text-xs font-semibold uppercase tracking-[0.15em] text-terracotta">
-              Follow
+              Contact
             </h3>
             <ul className="mt-4 space-y-3">
-              {socials.map((s) => (
-                <li key={s.label}>
-                  <a
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 font-body text-sm text-cream/60 transition hover:text-cream"
-                  >
-                    <svg viewBox="0 0 32 32" className="h-4 w-4 fill-current">
-                      {s.icon}
-                    </svg>
-                    {s.label}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <a
+                  href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-body text-sm text-cream/60 transition hover:text-cream"
+                >
+                  WhatsApp: 0816 247 0726
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`https://wa.me/${WHATSAPP_NUMBER_2}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-body text-sm text-cream/60 transition hover:text-cream"
+                >
+                  WhatsApp: 0817 655 4823
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`https://wa.me/${COMPLAINTS_WHATSAPP}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-body text-sm text-cream/60 transition hover:text-cream"
+                >
+                  Complaints: 0818 630 4735
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:farmtopotfood@gmail.com"
+                  className="font-body text-sm text-cream/60 transition hover:text-cream"
+                >
+                  farmtopotfood@gmail.com
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-cream/10 pt-6 sm:flex-row sm:mt-16">
+        {/* Address bar */}
+        <div className="mt-10 rounded-2xl bg-cream/5 border border-cream/10 p-5 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-terracotta/10">
+                <svg className="h-5 w-5 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-body text-sm font-semibold text-cream">Visit Us</p>
+                <p className="mt-0.5 font-body text-sm text-cream/60">
+                  Kit Court Street, Harris Drive, Ajah, Lagos
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-sm text-cream/60">
+                <svg className="h-4 w-4 text-terracotta/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Open 24/7</span>
+              </div>
+              <a
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-full bg-terracotta px-4 py-2 text-sm font-semibold text-cream transition-all hover:bg-ember"
+              >
+                Get Directions
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Social links */}
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          {socials.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 font-body text-sm text-cream/50 transition hover:text-cream"
+            >
+              <svg viewBox="0 0 32 32" className="h-4 w-4 fill-current">
+                {s.icon}
+              </svg>
+              {s.label}
+            </a>
+          ))}
+        </div>
+
+        {/* Bottom bar */}
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-cream/10 pt-6 sm:flex-row">
           <p className="font-body text-xs text-cream/40">
             &copy; {new Date().getFullYear()} Farm2Pot And Grill. All rights
             reserved.

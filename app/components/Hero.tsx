@@ -186,7 +186,7 @@ export default function Hero() {
             transition={{ delay: 2, duration: 0.8 }}
           >
             {[
-              { value: "50+", label: "Dishes" },
+              { value: "100+", label: "Dishes" },
               { value: "5★", label: "Rating" },
               { value: "24/7", label: "Service" },
               { value: "100%", label: "Fresh" },
