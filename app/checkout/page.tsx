@@ -1,7 +1,11 @@
 import Checkout from "../components/Checkout";
 
 export const metadata = {
-  title: "Order — Farm2Pot And Grill",
+  title: "Order",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function CheckoutPage() {

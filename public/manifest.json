@@ -5,7 +5,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1B4A32",
-  "theme_color": "#C6672B",
+  "theme_color": "#1B4A32",
   "orientation": "portrait-primary",
   "categories": ["food", "restaurant", "shopping"],
   "icons": [

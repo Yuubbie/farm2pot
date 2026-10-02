@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Leaf, Truck, Shield } from "lucide-react";
+import { ArrowRight, Leaf, Truck, ShoppingBag } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -135,7 +135,7 @@ export default function Hero() {
             {[
               { icon: Leaf, label: "Fresh Daily" },
               { icon: Truck, label: "24/7 Service" },
-              { icon: Shield, label: "Quality Guaranteed" },
+              { icon: ShoppingBag, label: "Order Online" },
             ].map(({ icon: Icon, label }, i) => (
               <motion.div
                 key={label}
@@ -186,10 +186,10 @@ export default function Hero() {
             transition={{ delay: 2, duration: 0.8 }}
           >
             {[
-              { value: "100+", label: "Dishes" },
-              { value: "5★", label: "Rating" },
-              { value: "24/7", label: "Service" },
-              { value: "100%", label: "Fresh" },
+              { value: "Order Online", label: "Fast & Easy" },
+              { value: "24/7", label: "Open" },
+              { value: "Pickup", label: "& Delivery" },
+              { value: "Ajah", label: "Lagos" },
             ].map((stat, i) => (
               <motion.div
                 key={stat.label}

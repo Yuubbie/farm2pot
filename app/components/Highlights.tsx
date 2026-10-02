@@ -5,7 +5,7 @@ const cards = [
   {
     href: "/menu",
     title: "See the Menu",
-    text: "111 dishes and drinks — soups, grills, cocktails, milkshakes, and more.",
+    text: "100+ dishes and drinks — soups, grills, cocktails, milkshakes, and more.",
   },
   {
     href: "/about",
