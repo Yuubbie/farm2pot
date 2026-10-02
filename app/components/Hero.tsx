@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Sparkles, Leaf, Truck, Shield } from "lucide-react";
+import { ArrowRight, Leaf, Truck, Shield } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -12,115 +12,56 @@ export default function Hero() {
       aria-labelledby="hero-title"
       style={{ minHeight: "100svh" }}
     >
-      {/* Organic gradient background - natural earth tones */}
+      {/* Background image - the new food photograph */}
       <div className="absolute inset-0 -z-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `
-              radial-gradient(ellipse 80% 60% at 20% 10%, rgba(27, 74, 50, 0.9) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 80% at 80% 90%, rgba(34, 100, 64, 0.7) 0%, transparent 50%),
-              radial-gradient(ellipse 40% 40% at 50% 50%, rgba(242, 185, 11, 0.08) 0%, transparent 60%),
-              linear-gradient(160deg, #1B4A32 0%, #0F2D1F 40%, #1B4A32 70%, #0A1F14 100%)
-            `,
-          }}
+        <Image
+          src="/hero.png"
+          alt="Farm2Pot And Grill signature dishes"
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+          quality={90}
         />
+        {/* Natural gradient overlay for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-charcoal/80 via-charcoal/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-charcoal/20" />
       </div>
 
-      {/* Subtle grain texture overlay - natural feel */}
+      {/* Subtle grain texture overlay */}
       <div
-        className="absolute inset-0 -z-10 opacity-[0.03] pointer-events-none"
+        className="absolute inset-0 -z-10 opacity-[0.02] pointer-events-none"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           backgroundSize: "256px 256px",
         }}
       />
 
-      {/* Organic floating shapes - natural movement */}
+      {/* Floating particles - natural movement */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        {/* Large soft blob - top left */}
-        <motion.div
-          className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full"
-          style={{
-            background: "radial-gradient(circle, rgba(242, 185, 11, 0.12) 0%, transparent 70%)",
-            filter: "blur(80px)",
-          }}
-          animate={{
-            x: [0, 30, 0],
-            y: [0, 20, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Medium blob - bottom right */}
-        <motion.div
-          className="absolute -bottom-48 -right-48 w-[600px] h-[600px] rounded-full"
-          style={{
-            background: "radial-gradient(circle, rgba(34, 100, 64, 0.25) 0%, transparent 70%)",
-            filter: "blur(100px)",
-          }}
-          animate={{
-            x: [0, -40, 0],
-            y: [0, -30, 0],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Small accent blob - center right */}
-        <motion.div
-          className="absolute top-1/3 right-1/4 w-[300px] h-[300px] rounded-full"
-          style={{
-            background: "radial-gradient(circle, rgba(246, 217, 92, 0.1) 0%, transparent 70%)",
-            filter: "blur(60px)",
-          }}
-          animate={{
-            x: [0, 20, 0],
-            y: [0, -25, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Floating leaf particles - natural movement */}
         {[
-          { x: "15%", y: "20%", size: 8, delay: 0 },
-          { x: "75%", y: "30%", size: 6, delay: 2 },
-          { x: "25%", y: "70%", size: 10, delay: 4 },
-          { x: "85%", y: "60%", size: 7, delay: 1 },
-          { x: "50%", y: "15%", size: 5, delay: 3 },
-          { x: "60%", y: "80%", size: 9, delay: 5 },
+          { x: "10%", y: "20%", size: 6, delay: 0 },
+          { x: "80%", y: "30%", size: 4, delay: 2 },
+          { x: "20%", y: "70%", size: 8, delay: 4 },
+          { x: "90%", y: "60%", size: 5, delay: 1 },
+          { x: "50%", y: "10%", size: 3, delay: 3 },
         ].map((leaf, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full"
+            className="absolute rounded-full bg-terracotta/20"
             style={{
               left: leaf.x,
               top: leaf.y,
               width: leaf.size,
               height: leaf.size,
-              background: "rgba(242, 185, 11, 0.15)",
             }}
             animate={{
-              y: [0, -30, 0],
-              x: [0, (i % 2 === 0 ? 15 : -15), 0],
-              rotate: [0, 180, 360],
-              opacity: [0.3, 0.7, 0.3],
+              y: [0, -20, 0],
+              x: [0, (i % 2 === 0 ? 10 : -10), 0],
+              opacity: [0.2, 0.5, 0.2],
             }}
             transition={{
-              duration: 8 + i * 2,
+              duration: 10 + i * 2,
               delay: leaf.delay,
               repeat: Infinity,
               ease: "easeInOut",
@@ -128,14 +69,6 @@ export default function Hero() {
           />
         ))}
       </div>
-
-      {/* Subtle vignette for depth */}
-      <div
-        className="absolute inset-0 -z-10 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 70% 60% at 50% 40%, transparent 0%, rgba(10, 31, 20, 0.4) 100%)",
-        }}
-      />
 
       <div className="relative flex min-h-[100svh] flex-col items-center justify-center px-5 py-20 sm:px-12 lg:px-20">
         {/* Scroll indicator */}
@@ -154,7 +87,7 @@ export default function Hero() {
         </motion.div>
 
         <div className="relative z-10 w-full max-w-5xl">
-          {/* Eyebrow - natural, understated */}
+          {/* Eyebrow */}
           <motion.div
             className="inline-flex items-center gap-3 mb-6"
             initial={{ opacity: 0, y: 20 }}
@@ -168,7 +101,7 @@ export default function Hero() {
             <span className="h-px w-8 bg-terracotta/40" />
           </motion.div>
 
-          {/* Main headline - elegant, natural typography */}
+          {/* Main headline */}
           <h1
             id="hero-title"
             className="flex flex-col gap-2 overflow-hidden"
@@ -196,9 +129,9 @@ export default function Hero() {
             ))}
           </h1>
 
-          {/* Subheadline - warm, inviting */}
+          {/* Subheadline */}
           <motion.p
-            className="mt-8 max-w-xl font-body text-cream/70 leading-relaxed"
+            className="mt-8 max-w-xl font-body text-cream/80 leading-relaxed"
             style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -208,7 +141,7 @@ export default function Hero() {
             Sunday soup pots to Friday-night cocktails.
           </motion.p>
 
-          {/* Trust badges - subtle, natural */}
+          {/* Trust badges */}
           <motion.div
             className="mt-10 flex flex-wrap items-center gap-6"
             initial={{ opacity: 0 }}
@@ -222,7 +155,7 @@ export default function Hero() {
             ].map(({ icon: Icon, label }, i) => (
               <motion.div
                 key={label}
-                className="flex items-center gap-2 text-sm font-body text-cream/50"
+                className="flex items-center gap-2 text-sm font-body text-cream/60"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.4 + i * 0.1, duration: 0.5 }}
@@ -233,7 +166,7 @@ export default function Hero() {
             ))}
           </motion.div>
 
-          {/* CTA Group - natural, inviting buttons */}
+          {/* CTA Group */}
           <motion.div
             className="mt-12 flex flex-col items-center gap-4 sm:flex-row"
             initial={{ opacity: 0, y: 20 }}
@@ -261,7 +194,7 @@ export default function Hero() {
             </Link>
           </motion.div>
 
-          {/* Stats bar - understated elegance */}
+          {/* Stats bar */}
           <motion.div
             className="mt-24 grid grid-cols-2 gap-8 sm:grid-cols-4 max-w-2xl mx-auto"
             initial={{ opacity: 0 }}
