@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import Link from "next/link";
 import { Package, Users, ShoppingBag, Settings, LogOut, ChevronLeft } from "lucide-react";
 
-const ADMIN_EMAILS = ["admin@farm2pot.com.ng", "farmtopotfood@gmail.com"]; // Add admin emails here
+const ADMIN_EMAILS = ["admin@farm2pot.com.ng", "farmtopotfood@gmail.com", "ubongemmanuel2107@gmail.com"]; // Add admin emails here
 
 const navItems = [
   { href: "/admin/orders", label: "Orders", icon: Package },
