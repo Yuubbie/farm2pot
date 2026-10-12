@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, X, MessageCircle, ShoppingBag, HelpCircle, MapPin, Clock, Phone, Trash2, Plus, Minus, ArrowRight } from "lucide-react";
+import { Mic, MicOff, X, MessageCircle, ShoppingBag, HelpCircle, MapPin, Clock, Phone, Trash2, ArrowRight, BookOpen } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useRouter } from "next/navigation";
+import { menu } from "../data/menu";
 
 interface Message {
   id: string;
@@ -13,63 +14,133 @@ interface Message {
   timestamp: Date;
 }
 
+interface OrderItem {
+  name: string;
+  price: number;
+  category: string;
+}
+
 interface OrderState {
-  step: "idle" | "rice" | "protein" | "drink" | "address" | "delivery_type" | "confirm";
-  rice?: string;
-  protein?: string;
-  drink?: string;
+  step: "idle" | "ordering" | "address" | "delivery_type" | "confirm";
+  items: OrderItem[];
   address?: string;
   deliveryType?: "pickup" | "delivery";
 }
 
-const MENU_DATA = {
-  rice: [
-    { name: "Jollof Rice", price: 38000, liters: ["2L", "3L", "5L"] },
-    { name: "Fried Rice", price: 45000, liters: ["2L", "3L", "5L"] },
-    { name: "Coconut Rice", price: 15500 },
-    { name: "Native Rice", price: 65000, liters: ["2L", "3L", "5L"] },
-    { name: "White Rice and Stew", price: 15500 },
-  ],
-  protein: [
-    { name: "Turkey", price: 8000 },
-    { name: "Chicken", price: 7000 },
-    { name: "Goat Meat", price: 7000 },
-    { name: "Beef", price: 6000 },
-    { name: "Catfish", price: 25500 },
-    { name: "Croaker", price: 26500 },
-    { name: "Grilled Chicken", price: 7000 },
-    { name: "Grilled Turkey", price: 8000 },
-  ],
-  drink: [
-    { name: "Water", price: 700 },
-    { name: "Coca-Cola", price: 1000 },
-    { name: "Fanta", price: 1000 },
-    { name: "Sprite", price: 1000 },
-    { name: "Malt", price: 1000 },
-    { name: "Fresh Orange Juice", price: 4000 },
-    { name: "Pineapple Juice", price: 4000 },
-    { name: "Zobo", price: 4000 },
-    { name: "Heineken", price: 2000 },
-    { name: "Trophy", price: 2000 },
-  ],
-};
-
-const FAQ_KEYWORDS: Record<string, string> = {
+const FAQ: Record<string, string> = {
   address: "We are located at Kit Court Street, Harris Drive, Ajah, Lagos.",
   location: "We are located at Kit Court Street, Harris Drive, Ajah, Lagos.",
+  where: "We are located at Kit Court Street, Harris Drive, Ajah, Lagos.",
   hours: "We are open 24 hours, 7 days a week.",
   open: "We are open 24 hours, 7 days a week.",
+  time: "We are open 24 hours, 7 days a week.",
   phone: "You can reach us on 0816 247 0726 or 0817 655 4823.",
   contact: "You can reach us on 0816 247 0726 or 0817 655 4823.",
+  call: "You can reach us on 0816 247 0726 or 0817 655 4823.",
+  whatsapp: "Message us on WhatsApp at 0816 247 0726.",
   delivery: "We deliver within Lagos only. Outside Lagos, you can pick up your order from our kitchen in Ajah.",
+  deliver: "We deliver within Lagos only. Outside Lagos, you can pick up your order from our kitchen in Ajah.",
   pickup: "You can pick up your order at Kit Court Street, Harris Drive, Ajah, Lagos. Pickup is available from anywhere.",
+  pick: "You can pick up your order at Kit Court Street, Harris Drive, Ajah, Lagos.",
   payment: "We accept bank transfer via Moniepoint, or cash on pickup.",
-  book: "To book, please call us on 0816 247 0726 or send a message on WhatsApp.",
-  reserve: "To reserve, please call us on 0816 247 0726 or send a message on WhatsApp.",
-  menu: "We have soups, rice, grills, pepper soups, fresh juices, cocktails, milkshakes, and more.",
+  pay: "We accept bank transfer via Moniepoint, or cash on pickup.",
+  bank: "We use Moniepoint. Account: 8246098181, Name: Farm2Pot Kitchen.",
+  book: "To book a table or reserve, please call us on 0816 247 0726 or message us on WhatsApp.",
+  reserve: "To book a table or reserve, please call us on 0816 247 0726 or message us on WhatsApp.",
+  booking: "To book a table or reserve, please call us on 0816 247 0726 or message us on WhatsApp.",
+  table: "To book a table, please call us on 0816 247 0726 or message us on WhatsApp.",
+  menu: "We have soups, rice, grills, pepper soups, shawarma, fresh juices, cocktails, milkshakes, beers, soft drinks, and more. What would you like to know about?",
   soup: "We have Egusi, Ogbono, Okro, Oha, Efo, Edikang Ikong, Afang, and Fisherman soup.",
-  grill: "We have Grilled Chicken, Grilled Turkey, Grilled Croaker, Suya, and more.",
+  rice: "We have Jollof Rice, Fried Rice, Coconut Rice, Native Rice, and White Rice with Stew.",
+  grill: "We have Grilled Chicken, Grilled Turkey, Grilled Croaker, Grilled Catfish, Suya, Tozo, and Shaki.",
+  drink: "We have fresh juices, cocktails, milkshakes, beers, and soft drinks.",
+  juice: "We have Fresh Orange, Pineapple and Ginger, Watermelon, Zobo, and Tigernut Drink.",
+  cocktail: "We have Mojito, Long Island, Sex on the Beach, Pina Colada, Margarita, and Chapman.",
+  milkshake: "We have Vanilla, Chocolate, Strawberry, Oreo, Lotus Biscoff, Caramel, Banana, Nutella, and Peanut Butter.",
+  beer: "We have Heineken, Trophy, Star, Gulder, Life, 33 Export, and Budweiser.",
+  soft: "We have Coca-Cola, Fanta, Sprite, Malt, and Schweppes.",
+  price: "Prices vary by item. You can check our menu page for full pricing, or ask me about a specific item.",
+  cost: "Prices vary by item. You can check our menu page for full pricing, or ask me about a specific item.",
+  how: "You can order online through our website, or call us on 0816 247 0726.",
+  order: "You can order online through our website, or call us on 0816 247 0726.",
+  complaint: "For complaints, please call 0818 630 4735 or message us on WhatsApp.",
+  complain: "For complaints, please call 0818 630 4735 or message us on WhatsApp.",
+  refund: "We do not offer refunds. Please check our ordering terms for more info.",
+  refunds: "We do not offer refunds. Please check our ordering terms for more info.",
+  allergy: "Please inform us of any allergies before placing your order.",
+  allergen: "Please inform us of any allergies before placing your order.",
+  parking: "Yes, we have parking available at our location.",
+  park: "Yes, we have parking available at our location.",
+  wifi: "Yes, we have free WiFi for customers.",
+  card: "We currently accept bank transfer and cash on pickup. Card payment is coming soon.",
+  cards: "We currently accept bank transfer and cash on pickup. Card payment is coming soon.",
+  vegan: "We have some vegetarian options. Please ask about specific items.",
+  vegetarian: "We have some vegetarian options. Please ask about specific items.",
+  spicy: "Some of our dishes are spicy. We can adjust the spice level on request.",
+  halal: "Yes, all our meat is halal.",
+  fresh: "All our ingredients are fresh and sourced daily.",
+  quality: "We maintain high quality standards. All complaints are handled within 48 hours.",
+  bulk: "Yes, we offer bulk and freezer orders. Please call 0816 247 0726 for bulk pricing.",
+  freezer: "Yes, we offer freezer orders. Meals require 4-5 days to freeze properly.",
+  freeze: "Yes, we offer freezer orders. Meals require 4-5 days to freeze properly.",
+  event: "Yes, we cater for events. Please call 0816 247 0726 for event bookings.",
+  cater: "Yes, we cater for events. Please call 0816 247 0726 for event bookings.",
+  party: "Yes, we cater for parties and events. Please call 0816 247 0726.",
+  wedding: "Yes, we cater for weddings. Please call 0816 247 0726 for wedding packages.",
 };
+
+function searchMenu(query: string): OrderItem[] {
+  const results: OrderItem[] = [];
+  const q = query.toLowerCase();
+
+  for (const category of menu) {
+    for (const item of category.items) {
+      if (item.name.toLowerCase().includes(q)) {
+        // Get price from various sources
+        let price: number | undefined;
+
+        if (item.tiers && item.tiers.length > 0) {
+          price = item.tiers[0].price;
+        } else if (item.price) {
+          price = item.price;
+        } else if (category.flatPrice) {
+          price = category.flatPrice;
+        } else if (category.bigPrice && category.smallPrice) {
+          price = category.bigPrice;
+        }
+
+        if (price) {
+          results.push({
+            name: item.name,
+            price,
+            category: category.name,
+          });
+        }
+      }
+    }
+  }
+
+  return results.slice(0, 5);
+}
+
+function getCategoryItems(categoryName: string): string[] {
+  const category = menu.find(
+    (c) => c.name.toLowerCase().includes(categoryName.toLowerCase())
+  );
+  if (!category) return [];
+
+  return category.items.map((item) => {
+    let price = "";
+    if (item.tiers && item.tiers.length > 0) {
+      price = ` (from ₦${item.tiers[0].price.toLocaleString()})`;
+    } else if (item.price) {
+      price = ` (₦${item.price.toLocaleString()})`;
+    } else if (category.flatPrice) {
+      price = ` (₦${category.flatPrice.toLocaleString()})`;
+    }
+    return `${item.name}${price}`;
+  });
+}
 
 export default function VoiceAssistant() {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,9 +148,8 @@ export default function VoiceAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isSupported, setIsSupported] = useState(true);
-  const [orderState, setOrderState] = useState<OrderState>({ step: "idle" });
-  const [currentOrder, setCurrentOrder] = useState<{ rice?: any; protein?: any; drink?: any }>({});
-  const { addItem, items, removeItem, updateQuantity } = useCart();
+  const [orderState, setOrderState] = useState<OrderState>({ step: "idle", items: [] });
+  const { addItem, items, clearCart } = useCart();
   const router = useRouter();
   const recognitionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -113,158 +183,152 @@ export default function VoiceAssistant() {
   }, []);
 
   const calculateTotal = useCallback(() => {
-    let total = 0;
-    if (currentOrder.rice) total += currentOrder.rice.price;
-    if (currentOrder.protein) total += currentOrder.protein.price;
-    if (currentOrder.drink) total += currentOrder.drink.price;
-    return total;
-  }, [currentOrder]);
+    return orderState.items.reduce((sum, item) => sum + item.price, 0);
+  }, [orderState.items]);
 
   const resetOrder = useCallback(() => {
-    setOrderState({ step: "idle" });
-    setCurrentOrder({});
+    setOrderState({ step: "idle", items: [] });
   }, []);
 
-  const startOrderFlow = useCallback(() => {
-    setOrderState({ step: "rice" });
-    setCurrentOrder({});
-    const msg = "Let's build your order! What rice would you like? We have Jollof Rice, Fried Rice, Coconut Rice, Native Rice, or White Rice with Stew.";
-    addMessage(msg, "assistant");
-    speak(msg);
-  }, [addMessage, speak]);
+  const addToOrder = useCallback((item: OrderItem) => {
+    setOrderState((prev) => ({
+      ...prev,
+      items: [...prev.items, item],
+    }));
+  }, []);
 
-  const processOrderFlow = useCallback((transcript: string) => {
-    const lower = transcript.toLowerCase().trim();
+  const removeFromOrder = useCallback((index: number) => {
+    setOrderState((prev) => ({
+      ...prev,
+      items: prev.items.filter((_, i) => i !== index),
+    }));
+  }, []);
 
-    switch (orderState.step) {
-      case "rice": {
-        const found = MENU_DATA.rice.find((r) => lower.includes(r.name.toLowerCase().split(" ")[0]));
-        if (found) {
-          setCurrentOrder((prev) => ({ ...prev, rice: found }));
-          setOrderState({ ...orderState, step: "protein" });
-          const msg = `Great choice! ${found.name} selected. Now, what protein would you like? We have Turkey, Chicken, Goat Meat, Beef, Catfish, or Grilled options.`;
-          addMessage(msg, "assistant");
-          speak(msg);
-        } else {
-          const msg = "I didn't recognize that rice. We have Jollof Rice, Fried Rice, Coconut Rice, Native Rice, or White Rice with Stew. Which would you like?";
-          addMessage(msg, "assistant");
-          speak(msg);
-        }
-        break;
-      }
-
-      case "protein": {
-        const found = MENU_DATA.protein.find((p) => lower.includes(p.name.toLowerCase().split(" ")[0]));
-        if (found) {
-          setCurrentOrder((prev) => ({ ...prev, protein: found }));
-          setOrderState({ ...orderState, step: "drink" });
-          const msg = `Excellent! ${found.name} selected. Now, what drink would you like? We have Water, Coca-Cola, Fanta, Sprite, Malt, Fresh juices, Zobo, or beers like Heineken and Trophy.`;
-          addMessage(msg, "assistant");
-          speak(msg);
-        } else {
-          const msg = "I didn't recognize that protein. We have Turkey, Chicken, Goat Meat, Beef, Catfish, or Grilled options. Which would you like?";
-          addMessage(msg, "assistant");
-          speak(msg);
-        }
-        break;
-      }
-
-      case "drink": {
-        const found = MENU_DATA.drink.find((d) => lower.includes(d.name.toLowerCase().split(" ")[0]));
-        if (found) {
-          setCurrentOrder((prev) => ({ ...prev, drink: found }));
-          setOrderState({ ...orderState, step: "delivery_type" });
-          const msg = `Perfect! ${found.name} selected. Now, is this for pickup or delivery? Please note: delivery is only within Lagos. If you're outside Lagos, pickup is available from anywhere.`;
-          addMessage(msg, "assistant");
-          speak(msg);
-        } else {
-          const msg = "I didn't recognize that drink. We have Water, Coca-Cola, Fanta, Sprite, Malt, Fresh juices, Zobo, or beers. Which would you like?";
-          addMessage(msg, "assistant");
-          speak(msg);
-        }
-        break;
-      }
-
-      case "delivery_type": {
-        if (lower.includes("pickup") || lower.includes("pick up")) {
-          setOrderState({ ...orderState, step: "confirm" });
-          const msg = "Got it! Pickup it is. You can collect from our kitchen at Kit Court Street, Harris Drive, Ajah, Lagos. Shall I add this to your order?";
-          addMessage(msg, "assistant");
-          speak(msg);
-        } else if (lower.includes("delivery") || lower.includes("deliver")) {
-          setOrderState({ ...orderState, step: "address" });
-          const msg = "Delivery it is! We deliver within Lagos. What is your delivery address?";
-          addMessage(msg, "assistant");
-          speak(msg);
-        } else {
-          const msg = "Is this for pickup or delivery? Remember, delivery is only within Lagos. If you're outside Lagos, pickup is available from anywhere.";
-          addMessage(msg, "assistant");
-          speak(msg);
-        }
-        break;
-      }
-
-      case "address": {
-        if (lower.length > 10) {
-          setOrderState({ ...orderState, step: "confirm", address: transcript });
-          const msg = `Got it! Delivery to: ${transcript}. Shall I add this to your order?`;
-          addMessage(msg, "assistant");
-          speak(msg);
-        } else {
-          const msg = "Please provide a more complete delivery address.";
-          addMessage(msg, "assistant");
-          speak(msg);
-        }
-        break;
-      }
-
-      case "confirm": {
-        if (lower.includes("yes") || lower.includes("yeah") || lower.includes("sure") || lower.includes("ok") || lower.includes("add")) {
-          // Add items to cart
-          if (currentOrder.rice) {
-            addItem({ id: `voice-rice-${Date.now()}`, name: currentOrder.rice.name, price: currentOrder.rice.price });
-          }
-          if (currentOrder.protein) {
-            addItem({ id: `voice-protein-${Date.now()}`, name: currentOrder.protein.name, price: currentOrder.protein.price });
-          }
-          if (currentOrder.drink) {
-            addItem({ id: `voice-drink-${Date.now()}`, name: currentOrder.drink.name, price: currentOrder.drink.price });
-          }
-
-          const total = calculateTotal();
-          const summary = `Order added to cart! ${currentOrder.rice?.name || ""} + ${currentOrder.protein?.name || ""} + ${currentOrder.drink?.name || ""}. Total: ₦${total.toLocaleString()}. Taking you to checkout.`;
-          addMessage(summary, "assistant");
-          speak(summary);
-
-          setTimeout(() => {
-            router.push("/checkout");
-            resetOrder();
-          }, 2000);
-        } else if (lower.includes("no") || lower.includes("cancel") || lower.includes("stop")) {
-          const msg = "No problem. Your order has been cancelled. Would you like to start over or is there anything else?";
-          addMessage(msg, "assistant");
-          speak(msg);
-          resetOrder();
-        } else {
-          const msg = "Shall I add this to your order? Say yes to confirm or no to cancel.";
-          addMessage(msg, "assistant");
-          speak(msg);
-        }
-        break;
-      }
-
-      default:
-        break;
+  const confirmOrder = useCallback(() => {
+    for (const item of orderState.items) {
+      addItem({
+        id: `voice-${Date.now()}-${Math.random()}`,
+        name: item.name,
+        price: item.price,
+      });
     }
-  }, [orderState, currentOrder, addItem, addMessage, router, resetOrder, speak, calculateTotal]);
 
-  const processGeneralCommand = useCallback((transcript: string) => {
+    const total = calculateTotal();
+    const summary = `Order added to cart! ${orderState.items.map((i) => i.name).join(", ")}. Total: ₦${total.toLocaleString()}. Taking you to checkout.`;
+    addMessage(summary, "assistant");
+    speak(summary);
+
+    setTimeout(() => {
+      router.push("/checkout");
+      resetOrder();
+    }, 2000);
+  }, [orderState.items, addItem, addMessage, router, resetOrder, speak, calculateTotal]);
+
+  const processCommand = useCallback((transcript: string) => {
     const lower = transcript.toLowerCase().trim();
     addMessage(transcript, "user");
 
-    // Start order flow
-    if (lower.includes("order") || lower.includes("buy") || lower.includes("food") || lower.includes("hungry") || lower.includes("eat")) {
-      startOrderFlow();
+    // ===== ORDER FLOW =====
+    if (orderState.step === "ordering") {
+      // Check for more items
+      const moreItems = searchMenu(lower);
+      if (moreItems.length > 0 && !lower.includes("done") && !lower.includes("that's all") && !lower.includes("checkout")) {
+        const item = moreItems[0];
+        addToOrder(item);
+        const msg = `Added ${item.name} (₦${item.price.toLocaleString()}) to your order. Anything else? Say "done" or "checkout" when finished.`;
+        addMessage(msg, "assistant");
+        speak(msg);
+        return;
+      }
+
+      if (lower.includes("done") || lower.includes("that's all") || lower.includes("checkout") || lower.includes("no more")) {
+        if (orderState.items.length === 0) {
+          const msg = "Your order is empty. What would you like to order? You can say things like 'order jollof rice', 'pepper soup', 'grilled chicken', or 'cocktail'.";
+          addMessage(msg, "assistant");
+          speak(msg);
+        } else {
+          setOrderState((prev) => ({ ...prev, step: "delivery_type" }));
+          const total = calculateTotal();
+          const msg = `Great! Your order total is ₦${total.toLocaleString()}. Is this for pickup or delivery? Remember: delivery is only within Lagos. Outside Lagos? Pickup from anywhere.`;
+          addMessage(msg, "assistant");
+          speak(msg);
+        }
+        return;
+      }
+
+      // Try to find items anyway
+      const items = searchMenu(lower);
+      if (items.length > 0) {
+        const item = items[0];
+        addToOrder(item);
+        const msg = `Added ${item.name} (₦${item.price.toLocaleString()}) to your order. Anything else? Say "done" when finished.`;
+        addMessage(msg, "assistant");
+        speak(msg);
+      } else {
+        const msg = "I couldn't find that on the menu. Try saying something like 'jollof rice', 'pepper soup', 'grilled chicken', 'suya', 'mojito', or 'chapman'. Or say 'menu' to hear categories.";
+        addMessage(msg, "assistant");
+        speak(msg);
+      }
+      return;
+    }
+
+    if (orderState.step === "delivery_type") {
+      if (lower.includes("pickup") || lower.includes("pick up")) {
+        setOrderState((prev) => ({ ...prev, step: "confirm", deliveryType: "pickup" }));
+        const msg = "Got it! Pickup from Kit Court Street, Harris Drive, Ajah, Lagos. Shall I add this to your cart?";
+        addMessage(msg, "assistant");
+        speak(msg);
+      } else if (lower.includes("delivery") || lower.includes("deliver")) {
+        setOrderState((prev) => ({ ...prev, step: "address", deliveryType: "delivery" }));
+        const msg = "Delivery it is! We deliver within Lagos. What is your delivery address?";
+        addMessage(msg, "assistant");
+        speak(msg);
+      } else {
+        const msg = "Is this for pickup or delivery? Delivery is only within Lagos. If you're outside Lagos, pickup is available from anywhere.";
+        addMessage(msg, "assistant");
+        speak(msg);
+      }
+      return;
+    }
+
+    if (orderState.step === "address") {
+      if (lower.length > 10) {
+        setOrderState((prev) => ({ ...prev, step: "confirm", address: transcript }));
+        const msg = `Got it! Delivery to: ${transcript}. Shall I add this to your cart?`;
+        addMessage(msg, "assistant");
+        speak(msg);
+      } else {
+        const msg = "Please provide a more complete delivery address.";
+        addMessage(msg, "assistant");
+        speak(msg);
+      }
+      return;
+    }
+
+    if (orderState.step === "confirm") {
+      if (lower.includes("yes") || lower.includes("yeah") || lower.includes("sure") || lower.includes("ok") || lower.includes("add")) {
+        confirmOrder();
+      } else if (lower.includes("no") || lower.includes("cancel") || lower.includes("stop")) {
+        const msg = "No problem. Your order has been cancelled. Would you like to start over?";
+        addMessage(msg, "assistant");
+        speak(msg);
+        resetOrder();
+      } else {
+        const msg = "Shall I add this to your cart? Say yes to confirm or no to cancel.";
+        addMessage(msg, "assistant");
+        speak(msg);
+      }
+      return;
+    }
+
+    // ===== GENERAL COMMANDS =====
+
+    // Start ordering
+    if (lower.includes("order") || lower.includes("buy") || lower.includes("food") || lower.includes("hungry") || lower.includes("eat") || lower.includes("hungry")) {
+      setOrderState({ step: "ordering", items: [] });
+      const msg = "Let's build your order! You can say things like 'jollof rice', 'pepper soup', 'grilled chicken', 'suya', 'mojito', 'chapman', or 'water'. What would you like first?";
+      addMessage(msg, "assistant");
+      speak(msg);
       return;
     }
 
@@ -294,15 +358,28 @@ export default function VoiceAssistant() {
       return;
     }
 
-    // Help
-    if (lower.includes("help") || lower.includes("what can you do")) {
-      speak("I can take orders by asking what rice, protein, and drink you'd like. I can also tell you our location, hours, delivery info, and help with booking. Try saying 'order food' to start.");
-      addMessage("I can take orders by asking what rice, protein, and drink you'd like. I can also tell you our location, hours, delivery info, and help with booking. Try saying 'order food' to start.", "assistant");
+    // Menu categories
+    if (lower.includes("menu") || lower.includes("what do you have") || lower.includes("what do you sell")) {
+      const categories = menu.map((c) => c.name).join(", ");
+      const msg = `We have: ${categories}. You can ask about any category, like "what soups do you have?" or "show me drinks". Or just say what you'd like to order.`;
+      addMessage(msg, "assistant");
+      speak(msg);
       return;
     }
 
+    // Category-specific queries
+    for (const category of menu) {
+      if (lower.includes(category.name.toLowerCase())) {
+        const items = getCategoryItems(category.name);
+        const msg = `Here's our ${category.name}: ${items.join(", ")}. Would you like to order any of these?`;
+        addMessage(msg, "assistant");
+        speak(msg);
+        return;
+      }
+    }
+
     // FAQ
-    for (const [keyword, answer] of Object.entries(FAQ_KEYWORDS)) {
+    for (const [keyword, answer] of Object.entries(FAQ)) {
       if (lower.includes(keyword)) {
         speak(answer);
         addMessage(answer, "assistant");
@@ -310,19 +387,31 @@ export default function VoiceAssistant() {
       }
     }
 
+    // Try to find a menu item
+    const foundItems = searchMenu(lower);
+    if (foundItems.length > 0) {
+      const item = foundItems[0];
+      addToOrder(item);
+      setOrderState((prev) => ({ ...prev, step: "ordering" }));
+      const msg = `Added ${item.name} (₦${item.price.toLocaleString()}) to your order. Anything else? Say "done" or "checkout" when finished.`;
+      addMessage(msg, "assistant");
+      speak(msg);
+      return;
+    }
+
+    // Help
+    if (lower.includes("help") || lower.includes("what can you do")) {
+      const msg = "I can take orders from our full menu — soups, rice, grills, drinks, and more. I can answer questions about our location, hours, delivery, payment, and booking. Try saying 'order food', 'what soups do you have?', 'where are you located?', or 'help'.";
+      addMessage(msg, "assistant");
+      speak(msg);
+      return;
+    }
+
     // Fallback
-    const fallback = "I can help you place an order, check your cart, or answer questions about our menu, location, and hours. Try saying 'order food' to start an order, or 'help' for more options.";
+    const fallback = "I can take orders from our full menu, or answer questions about our location, hours, delivery, and booking. Try saying 'order food' to start, or 'menu' to hear our categories.";
     speak(fallback);
     addMessage(fallback, "assistant");
-  }, [addMessage, items, router, speak, startOrderFlow]);
-
-  const processCommand = useCallback((transcript: string) => {
-    if (orderState.step !== "idle") {
-      processOrderFlow(transcript);
-    } else {
-      processGeneralCommand(transcript);
-    }
-  }, [orderState.step, processOrderFlow, processGeneralCommand]);
+  }, [orderState, addItem, addMessage, items, router, speak, searchMenu, getCategoryItems, addToOrder, calculateTotal, confirmOrder, resetOrder]);
 
   const startListening = useCallback(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -379,7 +468,7 @@ export default function VoiceAssistant() {
       setIsOpen(true);
       if (messages.length === 0) {
         setTimeout(() => {
-          const msg = "Hi! I'm Farm2Pot's voice assistant. I can take your order, answer questions, or help with booking. What would you like to do?";
+          const msg = "Hi! I'm Farm2Pot's voice assistant. I can take orders from our full menu, answer questions about location, hours, delivery, and help with booking. What would you like to do?";
           speak(msg);
           addMessage(msg, "assistant");
         }, 300);
@@ -420,7 +509,7 @@ export default function VoiceAssistant() {
                 <span className="font-display text-sm font-semibold text-cream">Voice Assistant</span>
                 {orderState.step !== "idle" && (
                   <span className="ml-2 rounded-full bg-terracotta/20 px-2 py-0.5 text-[10px] font-medium text-terracotta">
-                    ORDERING
+                    {orderState.step === "ordering" ? "ORDERING" : orderState.step === "confirm" ? "CONFIRM" : "DETAILS"}
                   </span>
                 )}
               </div>
@@ -432,32 +521,32 @@ export default function VoiceAssistant() {
               </button>
             </div>
 
-            {/* Order Summary (when ordering) */}
-            {orderState.step !== "idle" && (
+            {/* Order Summary */}
+            {orderState.items.length > 0 && (
               <div className="px-4 py-2 bg-terracotta/5 border-b border-charcoal/10">
-                <p className="text-xs font-semibold text-charcoal/70 mb-1">Current Order:</p>
-                <div className="flex flex-wrap gap-2">
-                  {currentOrder.rice && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-terracotta/10 px-2 py-0.5 text-xs text-charcoal">
-                      {currentOrder.rice.name} - ₦{currentOrder.rice.price.toLocaleString()}
-                    </span>
-                  )}
-                  {currentOrder.protein && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-terracotta/10 px-2 py-0.5 text-xs text-charcoal">
-                      {currentOrder.protein.name} - ₦{currentOrder.protein.price.toLocaleString()}
-                    </span>
-                  )}
-                  {currentOrder.drink && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-terracotta/10 px-2 py-0.5 text-xs text-charcoal">
-                      {currentOrder.drink.name} - ₦{currentOrder.drink.price.toLocaleString()}
-                    </span>
-                  )}
+                <p className="text-xs font-semibold text-charcoal/70 mb-1">
+                  Current Order ({orderState.items.length} item{orderState.items.length !== 1 ? "s" : ""}):
+                </p>
+                <div className="space-y-1">
+                  {orderState.items.map((item, i) => (
+                    <div key={i} className="flex items-center justify-between text-xs">
+                      <span className="text-charcoal">
+                        {item.name} - ₦{item.price.toLocaleString()}
+                      </span>
+                      <button
+                        onClick={() => removeFromOrder(i)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-                {orderState.step === "confirm" && (
-                  <p className="mt-1 text-xs font-bold text-terracotta">
+                <div className="mt-1 pt-1 border-t border-charcoal/10">
+                  <p className="text-xs font-bold text-terracotta">
                     Total: ₦{calculateTotal().toLocaleString()}
                   </p>
-                )}
+                </div>
               </div>
             )}
 
@@ -494,11 +583,18 @@ export default function VoiceAssistant() {
               {orderState.step === "idle" ? (
                 <>
                   <button
-                    onClick={() => startOrderFlow()}
+                    onClick={() => processCommand("order food")}
                     className="inline-flex items-center gap-1.5 rounded-full bg-terracotta px-3 py-1.5 text-xs font-semibold text-cream hover:bg-ember transition-colors"
                   >
                     <ShoppingBag className="h-3 w-3" />
                     Order Food
+                  </button>
+                  <button
+                    onClick={() => processCommand("menu")}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-charcoal/5 px-3 py-1.5 text-xs font-medium text-charcoal/70 hover:bg-charcoal/10 hover:text-charcoal transition-colors"
+                  >
+                    <BookOpen className="h-3 w-3" />
+                    Menu
                   </button>
                   <button
                     onClick={() => processCommand("what are your hours")}
@@ -523,17 +619,25 @@ export default function VoiceAssistant() {
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={() => {
-                    resetOrder();
-                    speak("Order cancelled. What else can I help you with?");
-                    addMessage("Order cancelled. What else can I help you with?", "assistant");
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-200 transition-colors"
-                >
-                  <Trash2 className="h-3 w-3" />
-                  Cancel Order
-                </button>
+                <>
+                  <button
+                    onClick={() => processCommand("done")}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-terracotta px-3 py-1.5 text-xs font-semibold text-cream hover:bg-ember transition-colors"
+                  >
+                    Done
+                  </button>
+                  <button
+                    onClick={() => {
+                      resetOrder();
+                      speak("Order cancelled. What else can I help you with?");
+                      addMessage("Order cancelled. What else can I help you with?", "assistant");
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-200 transition-colors"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                    Cancel
+                  </button>
+                </>
               )}
             </div>
 
