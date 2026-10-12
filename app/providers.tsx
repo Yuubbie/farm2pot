@@ -5,6 +5,7 @@ import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import AuthModal from "./components/auth/AuthModal";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
+import VoiceAssistant from "./components/VoiceAssistant";
 import { useAuth } from "./context/AuthContext";
 
 function AuthModalWrapper() {
@@ -72,6 +73,7 @@ export function ClientProviders({ children }: { children: ReactNode }) {
         <ServiceWorkerRegistration />
         <AuthModalWrapper />
         <PWAInstallPrompt />
+        <VoiceAssistant />
         {children}
       </AuthProvider>
     </CartProvider>
