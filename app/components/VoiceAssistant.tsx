@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, X, MessageCircle, ShoppingBag, HelpCircle, MapPin, Clock, Phone } from "lucide-react";
+import { Mic, MicOff, X, MessageCircle, ShoppingBag, HelpCircle, MapPin, Clock, Phone, Trash2, Plus, Minus, ArrowRight } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useRouter } from "next/navigation";
 
@@ -13,6 +13,47 @@ interface Message {
   timestamp: Date;
 }
 
+interface OrderState {
+  step: "idle" | "rice" | "protein" | "drink" | "address" | "delivery_type" | "confirm";
+  rice?: string;
+  protein?: string;
+  drink?: string;
+  address?: string;
+  deliveryType?: "pickup" | "delivery";
+}
+
+const MENU_DATA = {
+  rice: [
+    { name: "Jollof Rice", price: 38000, liters: ["2L", "3L", "5L"] },
+    { name: "Fried Rice", price: 45000, liters: ["2L", "3L", "5L"] },
+    { name: "Coconut Rice", price: 15500 },
+    { name: "Native Rice", price: 65000, liters: ["2L", "3L", "5L"] },
+    { name: "White Rice and Stew", price: 15500 },
+  ],
+  protein: [
+    { name: "Turkey", price: 8000 },
+    { name: "Chicken", price: 7000 },
+    { name: "Goat Meat", price: 7000 },
+    { name: "Beef", price: 6000 },
+    { name: "Catfish", price: 25500 },
+    { name: "Croaker", price: 26500 },
+    { name: "Grilled Chicken", price: 7000 },
+    { name: "Grilled Turkey", price: 8000 },
+  ],
+  drink: [
+    { name: "Water", price: 700 },
+    { name: "Coca-Cola", price: 1000 },
+    { name: "Fanta", price: 1000 },
+    { name: "Sprite", price: 1000 },
+    { name: "Malt", price: 1000 },
+    { name: "Fresh Orange Juice", price: 4000 },
+    { name: "Pineapple Juice", price: 4000 },
+    { name: "Zobo", price: 4000 },
+    { name: "Heineken", price: 2000 },
+    { name: "Trophy", price: 2000 },
+  ],
+};
+
 const FAQ_KEYWORDS: Record<string, string> = {
   address: "We are located at Kit Court Street, Harris Drive, Ajah, Lagos.",
   location: "We are located at Kit Court Street, Harris Drive, Ajah, Lagos.",
@@ -20,35 +61,15 @@ const FAQ_KEYWORDS: Record<string, string> = {
   open: "We are open 24 hours, 7 days a week.",
   phone: "You can reach us on 0816 247 0726 or 0817 655 4823.",
   contact: "You can reach us on 0816 247 0726 or 0817 655 4823.",
-  delivery: "We offer both pickup and delivery. Delivery is via Bolt or InDrive.",
-  pickup: "You can pick up your order at Kit Court Street, Harris Drive, Ajah, Lagos.",
+  delivery: "We deliver within Lagos only. Outside Lagos, you can pick up your order from our kitchen in Ajah.",
+  pickup: "You can pick up your order at Kit Court Street, Harris Drive, Ajah, Lagos. Pickup is available from anywhere.",
   payment: "We accept bank transfer via Moniepoint, or cash on pickup.",
   book: "To book, please call us on 0816 247 0726 or send a message on WhatsApp.",
   reserve: "To reserve, please call us on 0816 247 0726 or send a message on WhatsApp.",
   menu: "We have soups, rice, grills, pepper soups, fresh juices, cocktails, milkshakes, and more.",
   soup: "We have Egusi, Ogbono, Okro, Oha, Efo, Edikang Ikong, Afang, and Fisherman soup.",
-  rice: "We have Jollof Rice, Fried Rice, Coconut Rice, Native Rice, and more.",
   grill: "We have Grilled Chicken, Grilled Turkey, Grilled Croaker, Suya, and more.",
-  drink: "We have fresh juices, cocktails, milkshakes, beers, and soft drinks.",
-  juice: "We have Fresh Orange, Pineapple and Ginger, Watermelon, Zobo, and more.",
-  cocktail: "We have Mojito, Long Island, Sex on the Beach, Pina Colada, and more.",
-  milkshake: "We have Vanilla, Chocolate, Strawberry, Oreo, Lotus Biscoff, and more.",
 };
-
-const MENU_ITEMS = [
-  "egusi", "ogbono", "okro", "oha", "efo", "edikang", "afang", "fisherman",
-  "jollof", "fried rice", "coconut rice", "native rice", "white rice",
-  "pepper soup", "goat meat pepper", "beef pepper", "chicken pepper", "turkey pepper", "catfish pepper",
-  "grilled chicken", "grilled turkey", "grilled croaker", "grilled catfish", "suya", "tozo", "shaki",
-  "shawarma", "beef shawarma", "chicken shawarma", "suya shawarma",
-  "mojito", "long island", "sex on the beach", "pina colada", "margarita", "chapman",
-  "vanilla", "chocolate", "strawberry", "oreo", "lotus", "caramel", "banana", "nutella", "peanut butter",
-  "orange juice", "pineapple", "watermelon", "zobo", "tigernut",
-  "heineken", "trophy", "star", "gulder", "life", "budweiser",
-  "coca-cola", "fanta", "sprite", "malt", "schweppes",
-  "eba", "semovita", "wheat", "poondo yam",
-  "parfait", "spaghetti", "burger", "egg roll",
-];
 
 export default function VoiceAssistant() {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,14 +77,22 @@ export default function VoiceAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isSupported, setIsSupported] = useState(true);
-  const { addItem, items } = useCart();
+  const [orderState, setOrderState] = useState<OrderState>({ step: "idle" });
+  const [currentOrder, setCurrentOrder] = useState<{ rice?: any; protein?: any; drink?: any }>({});
+  const { addItem, items, removeItem, updateQuantity } = useCart();
   const router = useRouter();
+  const recognitionRef = useRef<any>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
       setIsSupported(false);
     }
   }, []);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const speak = useCallback((text: string) => {
     if ("speechSynthesis" in window) {
@@ -83,19 +112,176 @@ export default function VoiceAssistant() {
     ]);
   }, []);
 
-  const processCommand = useCallback((transcript: string) => {
+  const calculateTotal = useCallback(() => {
+    let total = 0;
+    if (currentOrder.rice) total += currentOrder.rice.price;
+    if (currentOrder.protein) total += currentOrder.protein.price;
+    if (currentOrder.drink) total += currentOrder.drink.price;
+    return total;
+  }, [currentOrder]);
+
+  const resetOrder = useCallback(() => {
+    setOrderState({ step: "idle" });
+    setCurrentOrder({});
+  }, []);
+
+  const startOrderFlow = useCallback(() => {
+    setOrderState({ step: "rice" });
+    setCurrentOrder({});
+    const msg = "Let's build your order! What rice would you like? We have Jollof Rice, Fried Rice, Coconut Rice, Native Rice, or White Rice with Stew.";
+    addMessage(msg, "assistant");
+    speak(msg);
+  }, [addMessage, speak]);
+
+  const processOrderFlow = useCallback((transcript: string) => {
+    const lower = transcript.toLowerCase().trim();
+
+    switch (orderState.step) {
+      case "rice": {
+        const found = MENU_DATA.rice.find((r) => lower.includes(r.name.toLowerCase().split(" ")[0]));
+        if (found) {
+          setCurrentOrder((prev) => ({ ...prev, rice: found }));
+          setOrderState({ ...orderState, step: "protein" });
+          const msg = `Great choice! ${found.name} selected. Now, what protein would you like? We have Turkey, Chicken, Goat Meat, Beef, Catfish, or Grilled options.`;
+          addMessage(msg, "assistant");
+          speak(msg);
+        } else {
+          const msg = "I didn't recognize that rice. We have Jollof Rice, Fried Rice, Coconut Rice, Native Rice, or White Rice with Stew. Which would you like?";
+          addMessage(msg, "assistant");
+          speak(msg);
+        }
+        break;
+      }
+
+      case "protein": {
+        const found = MENU_DATA.protein.find((p) => lower.includes(p.name.toLowerCase().split(" ")[0]));
+        if (found) {
+          setCurrentOrder((prev) => ({ ...prev, protein: found }));
+          setOrderState({ ...orderState, step: "drink" });
+          const msg = `Excellent! ${found.name} selected. Now, what drink would you like? We have Water, Coca-Cola, Fanta, Sprite, Malt, Fresh juices, Zobo, or beers like Heineken and Trophy.`;
+          addMessage(msg, "assistant");
+          speak(msg);
+        } else {
+          const msg = "I didn't recognize that protein. We have Turkey, Chicken, Goat Meat, Beef, Catfish, or Grilled options. Which would you like?";
+          addMessage(msg, "assistant");
+          speak(msg);
+        }
+        break;
+      }
+
+      case "drink": {
+        const found = MENU_DATA.drink.find((d) => lower.includes(d.name.toLowerCase().split(" ")[0]));
+        if (found) {
+          setCurrentOrder((prev) => ({ ...prev, drink: found }));
+          setOrderState({ ...orderState, step: "delivery_type" });
+          const msg = `Perfect! ${found.name} selected. Now, is this for pickup or delivery? Please note: delivery is only within Lagos. If you're outside Lagos, pickup is available from anywhere.`;
+          addMessage(msg, "assistant");
+          speak(msg);
+        } else {
+          const msg = "I didn't recognize that drink. We have Water, Coca-Cola, Fanta, Sprite, Malt, Fresh juices, Zobo, or beers. Which would you like?";
+          addMessage(msg, "assistant");
+          speak(msg);
+        }
+        break;
+      }
+
+      case "delivery_type": {
+        if (lower.includes("pickup") || lower.includes("pick up")) {
+          setOrderState({ ...orderState, step: "confirm" });
+          const msg = "Got it! Pickup it is. You can collect from our kitchen at Kit Court Street, Harris Drive, Ajah, Lagos. Shall I add this to your order?";
+          addMessage(msg, "assistant");
+          speak(msg);
+        } else if (lower.includes("delivery") || lower.includes("deliver")) {
+          setOrderState({ ...orderState, step: "address" });
+          const msg = "Delivery it is! We deliver within Lagos. What is your delivery address?";
+          addMessage(msg, "assistant");
+          speak(msg);
+        } else {
+          const msg = "Is this for pickup or delivery? Remember, delivery is only within Lagos. If you're outside Lagos, pickup is available from anywhere.";
+          addMessage(msg, "assistant");
+          speak(msg);
+        }
+        break;
+      }
+
+      case "address": {
+        if (lower.length > 10) {
+          setOrderState({ ...orderState, step: "confirm", address: transcript });
+          const msg = `Got it! Delivery to: ${transcript}. Shall I add this to your order?`;
+          addMessage(msg, "assistant");
+          speak(msg);
+        } else {
+          const msg = "Please provide a more complete delivery address.";
+          addMessage(msg, "assistant");
+          speak(msg);
+        }
+        break;
+      }
+
+      case "confirm": {
+        if (lower.includes("yes") || lower.includes("yeah") || lower.includes("sure") || lower.includes("ok") || lower.includes("add")) {
+          // Add items to cart
+          if (currentOrder.rice) {
+            addItem({ id: `voice-rice-${Date.now()}`, name: currentOrder.rice.name, price: currentOrder.rice.price });
+          }
+          if (currentOrder.protein) {
+            addItem({ id: `voice-protein-${Date.now()}`, name: currentOrder.protein.name, price: currentOrder.protein.price });
+          }
+          if (currentOrder.drink) {
+            addItem({ id: `voice-drink-${Date.now()}`, name: currentOrder.drink.name, price: currentOrder.drink.price });
+          }
+
+          const total = calculateTotal();
+          const summary = `Order added to cart! ${currentOrder.rice?.name || ""} + ${currentOrder.protein?.name || ""} + ${currentOrder.drink?.name || ""}. Total: ₦${total.toLocaleString()}. Taking you to checkout.`;
+          addMessage(summary, "assistant");
+          speak(summary);
+
+          setTimeout(() => {
+            router.push("/checkout");
+            resetOrder();
+          }, 2000);
+        } else if (lower.includes("no") || lower.includes("cancel") || lower.includes("stop")) {
+          const msg = "No problem. Your order has been cancelled. Would you like to start over or is there anything else?";
+          addMessage(msg, "assistant");
+          speak(msg);
+          resetOrder();
+        } else {
+          const msg = "Shall I add this to your order? Say yes to confirm or no to cancel.";
+          addMessage(msg, "assistant");
+          speak(msg);
+        }
+        break;
+      }
+
+      default:
+        break;
+    }
+  }, [orderState, currentOrder, addItem, addMessage, router, resetOrder, speak, calculateTotal]);
+
+  const processGeneralCommand = useCallback((transcript: string) => {
     const lower = transcript.toLowerCase().trim();
     addMessage(transcript, "user");
 
-    // Check for checkout
-    if (lower.includes("checkout") || lower.includes("pay") || lower.includes("done") || lower.includes("that's all") || lower.includes("thats all")) {
-      speak("Great! Taking you to checkout.");
-      addMessage("Great! Taking you to checkout.", "assistant");
-      setTimeout(() => router.push("/checkout"), 1500);
+    // Start order flow
+    if (lower.includes("order") || lower.includes("buy") || lower.includes("food") || lower.includes("hungry") || lower.includes("eat")) {
+      startOrderFlow();
       return;
     }
 
-    // Check for cart
+    // Checkout
+    if (lower.includes("checkout") || lower.includes("pay") || lower.includes("done") || lower.includes("that's all")) {
+      if (items.length === 0) {
+        speak("Your cart is empty. Would you like to place an order?");
+        addMessage("Your cart is empty. Would you like to place an order?", "assistant");
+      } else {
+        speak("Taking you to checkout.");
+        addMessage("Taking you to checkout.", "assistant");
+        setTimeout(() => router.push("/checkout"), 1500);
+      }
+      return;
+    }
+
+    // Cart
     if (lower.includes("cart") || lower.includes("what did i order") || lower.includes("my order")) {
       if (items.length === 0) {
         speak("Your cart is empty. What would you like to order?");
@@ -108,14 +294,14 @@ export default function VoiceAssistant() {
       return;
     }
 
-    // Check for help
+    // Help
     if (lower.includes("help") || lower.includes("what can you do")) {
-      speak("I can take orders, answer questions about our menu, location, hours, and help with booking. Try saying 'order jollof rice' or 'what are your hours?'");
-      addMessage("I can take orders, answer questions about our menu, location, hours, and help with booking. Try saying 'order jollof rice' or 'what are your hours?'", "assistant");
+      speak("I can take orders by asking what rice, protein, and drink you'd like. I can also tell you our location, hours, delivery info, and help with booking. Try saying 'order food' to start.");
+      addMessage("I can take orders by asking what rice, protein, and drink you'd like. I can also tell you our location, hours, delivery info, and help with booking. Try saying 'order food' to start.", "assistant");
       return;
     }
 
-    // Check for FAQ
+    // FAQ
     for (const [keyword, answer] of Object.entries(FAQ_KEYWORDS)) {
       if (lower.includes(keyword)) {
         speak(answer);
@@ -124,36 +310,19 @@ export default function VoiceAssistant() {
       }
     }
 
-    // Check for menu items
-    const foundItems: string[] = [];
-    for (const item of MENU_ITEMS) {
-      if (lower.includes(item)) {
-        foundItems.push(item);
-      }
-    }
-
-    if (foundItems.length > 0) {
-      const addedNames: string[] = [];
-      for (const item of foundItems) {
-        const price = getItemPrice(item);
-        if (price) {
-          addItem({ id: `voice-${item}`, name: capitalize(item), price });
-          addedNames.push(capitalize(item));
-        }
-      }
-      if (addedNames.length > 0) {
-        const response = `Added ${addedNames.join(", ")} to your cart. Anything else?`;
-        speak(response);
-        addMessage(response, "assistant");
-        return;
-      }
-    }
-
     // Fallback
-    const fallback = "I didn't understand that. You can say 'order jollof rice', 'what are your hours', 'where are you located', or 'help'.";
+    const fallback = "I can help you place an order, check your cart, or answer questions about our menu, location, and hours. Try saying 'order food' to start an order, or 'help' for more options.";
     speak(fallback);
     addMessage(fallback, "assistant");
-  }, [addItem, addMessage, items, router, speak]);
+  }, [addMessage, items, router, speak, startOrderFlow]);
+
+  const processCommand = useCallback((transcript: string) => {
+    if (orderState.step !== "idle") {
+      processOrderFlow(transcript);
+    } else {
+      processGeneralCommand(transcript);
+    }
+  }, [orderState.step, processOrderFlow, processGeneralCommand]);
 
   const startListening = useCallback(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -181,11 +350,15 @@ export default function VoiceAssistant() {
       setIsListening(false);
     };
 
+    recognitionRef.current = recognition;
     recognition.start();
   }, [processCommand]);
 
   const stopListening = useCallback(() => {
     setIsListening(false);
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
@@ -201,16 +374,17 @@ export default function VoiceAssistant() {
   const toggleOpen = () => {
     if (isOpen) {
       stopListening();
+      setIsOpen(false);
     } else {
       setIsOpen(true);
       if (messages.length === 0) {
         setTimeout(() => {
-          speak("Hi! I'm Farm2Pot's voice assistant. How can I help you today?");
-          addMessage("Hi! I'm Farm2Pot's voice assistant. How can I help you today?", "assistant");
+          const msg = "Hi! I'm Farm2Pot's voice assistant. I can take your order, answer questions, or help with booking. What would you like to do?";
+          speak(msg);
+          addMessage(msg, "assistant");
         }, 300);
       }
     }
-    setIsOpen(!isOpen);
   };
 
   if (!isSupported) {
@@ -244,6 +418,11 @@ export default function VoiceAssistant() {
               <div className="flex items-center gap-2">
                 <MessageCircle className="h-5 w-5 text-terracotta" />
                 <span className="font-display text-sm font-semibold text-cream">Voice Assistant</span>
+                {orderState.step !== "idle" && (
+                  <span className="ml-2 rounded-full bg-terracotta/20 px-2 py-0.5 text-[10px] font-medium text-terracotta">
+                    ORDERING
+                  </span>
+                )}
               </div>
               <button
                 onClick={toggleOpen}
@@ -252,6 +431,35 @@ export default function VoiceAssistant() {
                 <X className="h-4 w-4" />
               </button>
             </div>
+
+            {/* Order Summary (when ordering) */}
+            {orderState.step !== "idle" && (
+              <div className="px-4 py-2 bg-terracotta/5 border-b border-charcoal/10">
+                <p className="text-xs font-semibold text-charcoal/70 mb-1">Current Order:</p>
+                <div className="flex flex-wrap gap-2">
+                  {currentOrder.rice && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-terracotta/10 px-2 py-0.5 text-xs text-charcoal">
+                      {currentOrder.rice.name} - ₦{currentOrder.rice.price.toLocaleString()}
+                    </span>
+                  )}
+                  {currentOrder.protein && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-terracotta/10 px-2 py-0.5 text-xs text-charcoal">
+                      {currentOrder.protein.name} - ₦{currentOrder.protein.price.toLocaleString()}
+                    </span>
+                  )}
+                  {currentOrder.drink && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-terracotta/10 px-2 py-0.5 text-xs text-charcoal">
+                      {currentOrder.drink.name} - ₦{currentOrder.drink.price.toLocaleString()}
+                    </span>
+                  )}
+                </div>
+                {orderState.step === "confirm" && (
+                  <p className="mt-1 text-xs font-bold text-terracotta">
+                    Total: ₦{calculateTotal().toLocaleString()}
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Messages */}
             <div className="h-64 overflow-y-auto p-4 space-y-3">
@@ -278,25 +486,55 @@ export default function VoiceAssistant() {
                   </div>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </div>
 
             {/* Quick Actions */}
             <div className="px-4 pb-2 flex flex-wrap gap-2">
-              {[
-                { label: "Order Jollof", icon: ShoppingBag, cmd: "order jollof rice" },
-                { label: "Hours", icon: Clock, cmd: "what are your hours" },
-                { label: "Location", icon: MapPin, cmd: "where are you located" },
-                { label: "Help", icon: HelpCircle, cmd: "help" },
-              ].map((action) => (
+              {orderState.step === "idle" ? (
+                <>
+                  <button
+                    onClick={() => startOrderFlow()}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-terracotta px-3 py-1.5 text-xs font-semibold text-cream hover:bg-ember transition-colors"
+                  >
+                    <ShoppingBag className="h-3 w-3" />
+                    Order Food
+                  </button>
+                  <button
+                    onClick={() => processCommand("what are your hours")}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-charcoal/5 px-3 py-1.5 text-xs font-medium text-charcoal/70 hover:bg-charcoal/10 hover:text-charcoal transition-colors"
+                  >
+                    <Clock className="h-3 w-3" />
+                    Hours
+                  </button>
+                  <button
+                    onClick={() => processCommand("where are you located")}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-charcoal/5 px-3 py-1.5 text-xs font-medium text-charcoal/70 hover:bg-charcoal/10 hover:text-charcoal transition-colors"
+                  >
+                    <MapPin className="h-3 w-3" />
+                    Location
+                  </button>
+                  <button
+                    onClick={() => processCommand("help")}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-charcoal/5 px-3 py-1.5 text-xs font-medium text-charcoal/70 hover:bg-charcoal/10 hover:text-charcoal transition-colors"
+                  >
+                    <HelpCircle className="h-3 w-3" />
+                    Help
+                  </button>
+                </>
+              ) : (
                 <button
-                  key={action.label}
-                  onClick={() => processCommand(action.cmd)}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-charcoal/5 px-3 py-1.5 text-xs font-medium text-charcoal/70 hover:bg-charcoal/10 hover:text-charcoal transition-colors"
+                  onClick={() => {
+                    resetOrder();
+                    speak("Order cancelled. What else can I help you with?");
+                    addMessage("Order cancelled. What else can I help you with?", "assistant");
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-200 transition-colors"
                 >
-                  <action.icon className="h-3 w-3" />
-                  {action.label}
+                  <Trash2 className="h-3 w-3" />
+                  Cancel Order
                 </button>
-              ))}
+              )}
             </div>
 
             {/* Input */}
@@ -317,7 +555,7 @@ export default function VoiceAssistant() {
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder="Type or tap mic to speak..."
+                placeholder={orderState.step === "idle" ? "Type or tap mic..." : "Answer the question..."}
                 className="flex-1 rounded-full border border-charcoal/20 bg-cream px-4 py-2 text-sm text-charcoal placeholder-charcoal/40 focus:border-terracotta focus:outline-none focus:ring-2 focus:ring-terracotta/20"
               />
               <button
@@ -325,7 +563,7 @@ export default function VoiceAssistant() {
                 className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-terracotta text-cream hover:bg-ember transition-colors"
                 aria-label="Send"
               >
-                <MessageCircle className="h-5 w-5" />
+                <ArrowRight className="h-5 w-5" />
               </button>
             </form>
           </motion.div>
@@ -333,83 +571,4 @@ export default function VoiceAssistant() {
       </AnimatePresence>
     </>
   );
-}
-
-function capitalize(str: string): string {
-  return str.replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-function getItemPrice(item: string): number | null {
-  const prices: Record<string, number> = {
-    egusi: 45000,
-    ogbono: 45000,
-    okro: 55000,
-    oha: 45000,
-    efo: 55000,
-    edikang: 45000,
-    afang: 45000,
-    fisherman: 65000,
-    jollof: 38000,
-    "fried rice": 45000,
-    "coconut rice": 15500,
-    "native rice": 65000,
-    "white rice": 15500,
-    "pepper soup": 11500,
-    "goat meat pepper": 45000,
-    "beef pepper": 11500,
-    "chicken pepper": 11500,
-    "turkey pepper": 55000,
-    "catfish pepper": 20000,
-    "grilled chicken": 7000,
-    "grilled turkey": 8000,
-    "grilled croaker": 26500,
-    "grilled catfish": 25000,
-    suya: 2000,
-    tozo: 2000,
-    shaki: 1500,
-    shawarma: 5000,
-    "beef shawarma": 5000,
-    "chicken shawarma": 5000,
-    "suya shawarma": 8000,
-    mojito: 8000,
-    "long island": 12000,
-    "sex on the beach": 10000,
-    "pina colada": 10000,
-    margarita: 10000,
-    chapman: 7000,
-    vanilla: 9000,
-    chocolate: 9000,
-    strawberry: 9000,
-    oreo: 10000,
-    lotus: 11000,
-    caramel: 10000,
-    banana: 9000,
-    nutella: 10000,
-    "peanut butter": 11500,
-    "orange juice": 4000,
-    pineapple: 4000,
-    watermelon: 4000,
-    zobo: 4000,
-    tigernut: 4000,
-    heineken: 2000,
-    trophy: 2000,
-    star: 2000,
-    gulder: 2000,
-    life: 2000,
-    budweiser: 2000,
-    "coca-cola": 1000,
-    fanta: 1000,
-    sprite: 1000,
-    malt: 1000,
-    schweppes: 1000,
-    eba: 2500,
-    semovita: 2500,
-    wheat: 2500,
-    "poondo yam": 2500,
-    parfait: 9000,
-    spaghetti: 5000,
-    burger: 3000,
-    "egg roll": 2000,
-  };
-  return prices[item] || null;
 }
