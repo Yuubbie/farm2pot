@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "../context/CartContext";
 import Reveal from "./Reveal";
@@ -28,6 +28,24 @@ export default function Checkout() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  // If the customer built their order with the voice assistant, it already
+  // collected their details. Pre-fill the form (once, and only if recent).
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("farm2pot_voice_prefill");
+      if (!raw) return;
+      localStorage.removeItem("farm2pot_voice_prefill");
+      const p = JSON.parse(raw);
+      if (!p || Date.now() - (p.ts ?? 0) > 30 * 60 * 1000) return;
+      if (p.name) setName(String(p.name));
+      if (p.phone) setPhone(String(p.phone));
+      if (p.deliveryType === "delivery" || p.deliveryType === "pickup") setDeliveryType(p.deliveryType);
+      if (p.address) setAddress(String(p.address));
+    } catch {
+      // ignore unreadable prefill data
+    }
+  }, []);
 
   const canSend =
     items.length > 0 &&
